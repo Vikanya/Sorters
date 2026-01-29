@@ -48,17 +48,27 @@
             background: var(--card-bg); border: 1px solid var(--border); 
             border-radius: 18px; padding: 15px; cursor: pointer; 
             transition: all 0.5s cubic-bezier(0.2, 1, 0.3, 1);
+            justify-content: center; /* Center content when no video */
         }
 
         .choice-card.focus { flex: 2.8; border-color: var(--primary); box-shadow: 0 0 30px var(--glow-color); }
         .choice-card.dim { flex: 0.4; opacity: 0.25; filter: grayscale(0.8) blur(1px); }
 
-        .song-name { font-weight: 600; font-size: 1.5vw; margin-bottom: 12px; color: #fff; min-height: 2.2em; display: flex; align-items: center; justify-content: center; }
+        .song-name { 
+            font-weight: 600; font-size: 1.8vw; 
+            color: #fff; min-height: 2.2em; 
+            display: flex; align-items: center; justify-content: center;
+            transition: font-size 0.3s ease;
+        }
         
+        /* Fallback for Text-Only: Make font bigger */
+        .text-only .song-name { font-size: 2.5vw; flex: 1; }
+
         .video-wrapper { 
             flex: 1; width: 100%; background: #000; border-radius: 12px; 
             overflow: hidden; border: 3px solid transparent;
             display: flex; align-items: center; justify-content: center;
+            margin-top: 10px;
         }
         .video-wrapper div, .video-wrapper iframe { width: 100% !important; height: 100% !important; }
         .video-playing { border-color: var(--primary); }
@@ -80,9 +90,11 @@
         th { background: var(--primary); color: #000; padding: 15px; font-weight: bold; text-transform: uppercase; font-size: 12px; }
         td { padding: 12px; border-bottom: 1px solid var(--border); color: #fff; text-align: center; }
         tr:last-child td { border: none; }
+        
+        .hidden { display: none !important; }
     </style>
 </head>
-<body>
+<body class="loading-state">
 
     <div id="top-bar">
         <a href="index.html" class="nav-btn">⇠ Library</a>
@@ -96,7 +108,7 @@
 
     <header>
         <h1 id="page-title" style="margin:5px; font-size: 18px; letter-spacing: 2px; text-transform: uppercase; color: var(--primary);">Loading...</h1>
-        <div id="battleNumber" style="font-size: 11px; opacity: 0.6;">Fetching Data...</div>
+        <div id="battleNumber" style="font-size: 11px; opacity: 0.6;">Checking Data...</div>
         <div id="progressContainer"><div id="progressBar"></div></div>
     </header>
 
@@ -106,7 +118,7 @@
             <div id="wrapperLeft" class="video-wrapper" onclick="event.stopPropagation();">
                 <div id="playerLeft"></div>
             </div>
-            <span class="key-hint" style="margin-top:10px; font-size:10px; opacity:0.4;">[<span class="left-key-label">A</span>] PLAY</span>
+            <span class="key-hint left-hint" style="margin-top:10px; font-size:10px; opacity:0.4;">[<span class="left-key-label">A</span>] PLAY</span>
         </div>
 
         <div class="middle-controls">
@@ -120,12 +132,12 @@
             <div id="wrapperRight" class="video-wrapper" onclick="event.stopPropagation();">
                 <div id="playerRight"></div>
             </div>
-            <span class="key-hint" style="margin-top:10px; font-size:10px; opacity:0.4;">[<span class="right-key-label">Z</span>] PLAY</span>
+            <span class="key-hint right-hint" style="margin-top:10px; font-size:10px; opacity:0.4;">[<span class="right-key-label">Z</span>] PLAY</span>
         </div>
     </div>
 
     <div class="instruction-footer">
-        <span class="key-cap">← / →</span> WINNER | <span class="key-cap">↓</span> TIE | <span class="key-cap">Ctrl+Z</span> UNDO | <span class="key-cap" id="hint-left">A</span> / <span class="key-cap" id="hint-right">Z</span> VIDEO
+        <span class="key-cap">← / →</span> WINNER | <span class="key-cap">↓</span> TIE | <span class="key-cap">Ctrl+Z</span> UNDO <span id="video-keys-hint">| <span class="key-cap" id="hint-left">A</span> / <span class="key-cap" id="hint-right">Z</span> VIDEO</span>
     </div>
 
     <div id="resultField"></div>
@@ -134,6 +146,7 @@
 // --- GLOBAL DATA ---
 var namMember = [];
 var videoIds = [];
+var hasVideos = false;
 
 // --- BOOTSTRAP: Load Data from JSON ---
 async function loadSorterData() {
@@ -146,20 +159,34 @@ async function loadSorterData() {
     }
 
     try {
-        // Fetch the JSON file from your GitHub raw URL or relative path
         const response = await fetch(dataPath);
         const data = await response.json();
         
-        namMember = data.names;
-        videoIds = data.ids;
+        namMember = data.names || [];
+        videoIds = data.ids || [];
         
+        // Detect if we actually have videos to show
+        hasVideos = videoIds.length > 0 && videoIds.some(id => id && id.trim() !== "");
+
+        if (!hasVideos) {
+            document.body.classList.add('text-only');
+            document.querySelectorAll('.video-wrapper').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.key-hint').forEach(el => el.classList.add('hidden'));
+            document.getElementById('video-keys-hint').classList.add('hidden');
+        }
+
         // Update Title
         const cleanName = dataPath.split('/').pop().replace('.json', '').replace(/[-_]/g, ' ');
         document.title = cleanName.toUpperCase();
         document.getElementById('page-title').innerText = cleanName;
 
-        // Initialize Players
-        initYouTubePlayers();
+        if (hasVideos) {
+            initYouTubePlayers();
+        } else {
+            // Skip YT API and start immediately
+            initList();
+            updateUI();
+        }
     } catch (e) {
         console.error(e);
         document.getElementById('battleNumber').innerText = "Error loading data file.";
@@ -283,8 +310,14 @@ function updateUI(isUndo = false) {
         });
         document.querySelectorAll('.video-wrapper').forEach(w => w.classList.remove('video-playing'));
 
-        playerLeft.cueVideoById(videoIds[lstMember[cmp1][head1]]);
-        playerRight.cueVideoById(videoIds[lstMember[cmp2][head2]]);
+        if (hasVideos) {
+            const leftId = videoIds[lstMember[cmp1][head1]];
+            const rightId = videoIds[lstMember[cmp2][head2]];
+            
+            if (leftId) playerLeft.cueVideoById(leftId);
+            if (rightId) playerRight.cueVideoById(rightId);
+        }
+        
         if (!isUndo) numQuestion++;
     }
 }
@@ -312,7 +345,7 @@ function togglePlayer(player) {
 }
 
 function showResult() {
-    var ranking = 1, sameRank = 1, str = "<table><tr><th>Rank</th><th>Song</th></tr>";
+    var ranking = 1, sameRank = 1, str = "<table><tr><th>Rank</th><th>Name</th></tr>";
     for (var i=0; i<namMember.length; i++) {
         var idx = lstMember[0][i];
         str += `<tr><td>${ranking}</td><td>${namMember[idx]}</td></tr>`;
@@ -328,15 +361,18 @@ function showResult() {
 window.addEventListener('keydown', (e) => {
     if (e.target.tagName == 'INPUT' || e.target.tagName == 'TEXTAREA') return;
     if (e.ctrlKey && e.key === 'z') { undo(); return; }
-    if (e.code === 'KeyQ') togglePlayer(playerLeft);
-    if (e.code === 'KeyW') togglePlayer(playerRight);
+    
+    if (hasVideos) {
+        if (e.code === 'KeyQ') togglePlayer(playerLeft);
+        if (e.code === 'KeyW') togglePlayer(playerRight);
+    }
+    
     if (finishFlag) return;
     if (e.key === 'ArrowLeft') sortList(-1);
     if (e.key === 'ArrowRight') sortList(1);
     if (e.key === 'ArrowDown') sortList(0);
 });
 
-// Start the sequence
 loadSorterData();
 </script>
 </body>
