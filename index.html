@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My K-Pop Sorters</title>
+    <style>
+        :root {
+            --primary: #fb6dac;
+            --bg: #0a0a0a;
+            --card-bg: #161616;
+            --text: #ffffff;
+        }
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            text-align: center;
+            padding: 50px 20px;
+            margin: 0;
+        }
+        h1 { font-size: 3rem; margin-bottom: 10px; color: var(--primary); }
+        p { color: #888; margin-bottom: 40px; }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .sorter-link {
+            background: var(--card-bg);
+            border: 2px solid #222;
+            border-radius: 15px;
+            padding: 30px;
+            text-decoration: none;
+            color: white;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .sorter-link:hover {
+            border-color: var(--primary);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(251, 109, 172, 0.2);
+        }
+
+        .icon {
+            font-size: 40px;
+            margin-bottom: 15px;
+        }
+
+        .title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .count {
+            font-size: 0.8rem;
+            color: #666;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>K-POP PORTAL</h1>
+    <p>Select a battle to begin sorting your favorites.</p>
+
+    <div class="grid">
+        <a href="ive_sorter.html" class="sorter-link">
+            <div class="icon">✨</div>
+            <div class="title">IVE Discography</div>
+            <div class="count">32 Songs</div>
+        </a>
+
+        <a href="le_sserafim.html" class="sorter-link">
+            <div class="icon">🔥</div>
+            <div class="title">LE SSERAFIM</div>
+            <div class="count">24 Songs</div>
+        </a>
+
+        <a href="girl_groups_2025.html" class="sorter-link">
+            <div class="icon">👑</div>
+            <div class="title">Top Girl Groups 2025</div>
+            <div class="count">50 entries</div>
+        </a>
+        </div>
+
+</body>
+</html>
