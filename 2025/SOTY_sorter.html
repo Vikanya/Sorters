@@ -6,107 +6,97 @@
     <title>Loading...</title>
     <style>
         :root { 
-            --primary: #fb6dac; 
-            --bg: #0a0a0a; 
-            --card-bg: #161616;
-            --text: #ffffff;
-            --glow-color: #fb6dac;
+            --primary: #D4BEE4; /* Soft Lavender */
+            --accent: #AFE1AF;  /* Mint Green */
+            --bg: #F9F7F7;      /* Off-white/Pastel Grey */
+            --card-bg: #FFFFFF;
+            --text: #4A4A4A;    /* Soft Charcoal */
+            --glow-color: #D4BEE4;
         }
         body { 
-            font-family: 'Segoe UI', sans-serif; 
+            font-family: 'Segoe UI', Tahoma, sans-serif; 
             background-color: var(--bg); 
             color: var(--text);
             padding: 0; margin: 0; 
             display: flex; flex-direction: column;
-            height: 100vh; overflow: hidden; /* Prevents scrolling during battle */
+            height: 100vh; overflow: hidden;
         }
         
-        #settings-corner { position: fixed; top: 10px; right: 10px; background: #222; padding: 8px; border-radius: 5px; z-index: 1000; font-size: 11px; }
-        #settings-corner select { background: #000; color: #fff; border: 1px solid #444; }
+        /* Navigation / Settings */
+        #top-bar { 
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 10px 20px; background: white; border-bottom: 1px solid #eee;
+        }
+        .nav-btn {
+            text-decoration: none; color: var(--text); font-size: 12px; font-weight: bold;
+            padding: 8px 15px; border: 1px solid #ddd; border-radius: 20px; transition: 0.3s;
+        }
+        .nav-btn:hover { background: var(--primary); color: white; border-color: var(--primary); }
 
         header { flex: 0 1 auto; padding: 10px; }
-        #progressContainer { width: 95%; height: 4px; background: #222; margin: 5px auto; border-radius: 5px; }
+        #progressContainer { width: 95%; height: 6px; background: #eee; margin: 5px auto; border-radius: 5px; }
         #progressBar { width: 0%; height: 100%; background: var(--primary); transition: width 0.3s; }
         
-        /* The Arena: Vertical Expansion Fix */
         .battle-area { 
-            display: flex; 
-            flex: 1 1 auto; /* Takes all remaining height */
-            justify-content: center; 
-            align-items: stretch;
-            gap: 20px; 
-            padding: 20px;
-            box-sizing: border-box;
+            display: flex; flex: 1 1 auto; justify-content: center; align-items: stretch;
+            gap: 20px; padding: 20px; box-sizing: border-box;
         }
         
         .choice-card { 
-            flex: 1; 
-            display: flex; flex-direction: column;
-            background: var(--card-bg); 
-            border: 2px solid #222; 
-            border-radius: 20px; 
-            padding: 20px; 
-            cursor: pointer; 
+            flex: 1; display: flex; flex-direction: column;
+            background: var(--card-bg); border: 1px solid #eee; 
+            border-radius: 25px; padding: 20px; cursor: pointer; 
             transition: all 0.5s cubic-bezier(0.2, 1, 0.3, 1);
-            position: relative;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
         }
 
-        /* Focus Scaling */
-        .choice-card.focus { flex: 2.5; border-color: var(--primary); }
-        .choice-card.dim { flex: 0.5; opacity: 0.3; filter: blur(2px); }
+        .choice-card.focus { flex: 2.5; border-color: var(--primary); box-shadow: 0 10px 30px rgba(212, 190, 228, 0.4); }
+        .choice-card.dim { flex: 0.5; opacity: 0.4; filter: grayscale(0.5); }
 
-        .song-name { 
-            font-weight: 800; font-size: 1.8vw; 
-            margin-bottom: 15px; 
-            text-transform: uppercase; letter-spacing: 1px;
-        }
+        .song-name { font-weight: 600; font-size: 1.6vw; margin-bottom: 15px; color: var(--text); }
         
-        /* Video Wrapper: Maximizing Space */
         .video-wrapper { 
-            flex: 1; /* This forces the video to grow vertically */
-            width: 100%; 
-            background: #000; 
-            border-radius: 12px; 
-            overflow: hidden; 
-            border: 3px solid transparent;
+            flex: 1; width: 100%; background: #000; border-radius: 18px; 
+            overflow: hidden; border: 4px solid transparent;
             display: flex; align-items: center; justify-content: center;
         }
-        
-        /* Forces the YT iframe to fill the flex container */
-        .video-wrapper div, .video-wrapper iframe {
-            width: 100% !important;
-            height: 100% !important;
+        .video-wrapper div, .video-wrapper iframe { width: 100% !important; height: 100% !important; }
+        .video-playing { border-color: var(--primary); }
+
+        .middle-controls { display: flex; flex-direction: column; justify-content: center; gap: 12px; width: 140px; }
+        .btn { 
+            padding: 12px; border: 1px solid #eee; border-radius: 15px; 
+            cursor: pointer; background: white; color: var(--text); 
+            font-size: 11px; font-weight: bold; transition: 0.2s;
         }
+        .btn:hover { background: var(--accent); color: white; border-color: var(--accent); }
+        .btn-undo { color: #E79999; }
 
-        .video-playing { border-color: var(--glow-color); box-shadow: 0 0 40px var(--glow-color); }
-
-        .middle-controls { display: flex; flex-direction: column; justify-content: center; gap: 15px; width: 140px; }
-        .btn { padding: 15px 5px; border: 1px solid #333; border-radius: 10px; cursor: pointer; background: #111; color: white; font-size: 11px; font-weight: bold; text-transform: uppercase; }
-        .btn:hover { background: var(--primary); border-color: white; }
-        .btn-undo { color: #ff4d4d; border-color: #400; }
-
-        .instruction-footer { flex: 0 1 auto; padding: 10px; font-size: 11px; color: #555; background: #050505; }
-        .key-cap { color: var(--primary); font-weight: bold; }
-
-        /* Result View needs to be scrollable */
-        #resultField { overflow-y: auto; max-height: 100%; }
-        table { width: 80%; margin: 20px auto; border-collapse: collapse; }
-        th { background: var(--primary); padding: 15px; }
-        td { padding: 12px; border-bottom: 1px solid #222; }
+        .instruction-footer { flex: 0 1 auto; padding: 10px; font-size: 11px; color: #AAA; background: white; }
+        .key-cap { color: var(--primary); font-weight: bold; border: 1px solid #eee; padding: 2px 5px; border-radius: 4px; }
+        
+        #resultField { overflow-y: auto; color: var(--text); }
+        table { width: 80%; margin: 20px auto; border-collapse: collapse; border-radius: 15px; overflow: hidden; background: white; }
+        th { background: var(--primary); color: white; padding: 15px; }
+        td { padding: 12px; border-bottom: 1px solid #f5f5f5; }
     </style>
 </head>
 <body>
 
-    <div id="settings-corner">
-        Layout: <select id="layoutPicker" onchange="changeLayout(this.value)">
-            <option value="AZERTY">AZERTY</option>
-            <option value="QWERTY">QWERTY</option>
-        </select>
+    <div id="top-bar">
+        <a href="../index.html" class="nav-btn" id="portal-link">⇠ PORTAL</a>
+        
+        <div style="font-size: 11px;">
+            Layout: <select id="layoutPicker" onchange="changeLayout(this.value)" style="border-radius:10px; padding:2px;">
+                <option value="AZERTY">AZERTY</option>
+                <option value="QWERTY">QWERTY</option>
+            </select>
+        </div>
     </div>
 
     <header>
-        <h1 id="page-title" style="margin:5px; font-size: 22px;">Song Sorter</h1>
-        <div id="battleNumber">Connecting to YouTube...</div>
+        <h1 id="page-title" style="margin:5px; font-size: 20px; letter-spacing: 1px;">Song Sorter</h1>
+        <div id="battleNumber">Connecting...</div>
         <div id="progressContainer"><div id="progressBar"></div></div>
     </header>
 
@@ -116,12 +106,12 @@
             <div id="wrapperLeft" class="video-wrapper" onclick="event.stopPropagation();">
                 <div id="playerLeft"></div>
             </div>
-            <span class="key-hint" style="margin-top:10px; font-size:12px;">[<span class="left-key-label">A</span>] PLAY</span>
+            <span class="key-hint" style="margin-top:10px; font-size:11px; opacity:0.6;">[<span class="left-key-label">A</span>] PLAY</span>
         </div>
 
         <div class="middle-controls">
-            <div class="btn" onclick="if(!finishFlag) sortList(0)">I Like Both</div>
-            <div class="btn" onclick="if(!finishFlag) sortList(0)">No Opinion</div>
+            <div class="btn" onclick="if(!finishFlag) sortList(0)">I LIKE BOTH</div>
+            <div class="btn" onclick="if(!finishFlag) sortList(0)">NO OPINION</div>
             <button id="undoBtn" class="btn btn-undo" onclick="undo()" disabled>UNDO</button>
         </div>
 
@@ -130,17 +120,22 @@
             <div id="wrapperRight" class="video-wrapper" onclick="event.stopPropagation();">
                 <div id="playerRight"></div>
             </div>
-            <span class="key-hint" style="margin-top:10px; font-size:12px;">[<span class="right-key-label">Z</span>] PLAY</span>
+            <span class="key-hint" style="margin-top:10px; font-size:11px; opacity:0.6;">[<span class="right-key-label">Z</span>] PLAY</span>
         </div>
     </div>
 
     <div class="instruction-footer">
-        <span class="key-cap">← / →</span> Pick Winner | <span class="key-cap">↓</span> Tie | <span class="key-cap">Ctrl+Z</span> Undo | <span class="key-cap" id="hint-left">A</span> / <span class="key-cap" id="hint-right">Z</span> Toggle Video
+        <span class="key-cap">← / →</span> WINNER | <span class="key-cap">↓</span> TIE | <span class="key-cap">Ctrl+Z</span> UNDO | <span class="key-cap" id="hint-left">A</span> / <span class="key-cap" id="hint-right">Z</span> VIDEO
     </div>
 
     <div id="resultField"></div>
 
 <script>
+
+if (window.location.pathname.split('/').length <= 2) {
+    document.getElementById('portal-link').setAttribute('href', 'index.html');
+}
+
 // ==========================================
 // DATA PASTE BOX
 // ==========================================
