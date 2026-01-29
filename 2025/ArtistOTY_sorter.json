@@ -1,0 +1,25 @@
+{
+  "_displayMode_guide": {
+    "video": "Standard YouTube battle with default scaling.",
+    "text": "Text-only mode. Hides visual containers and centers large names.",
+    "big-names-video": "Prioritizes names at the top with smaller video players below.",
+    "linked-images": "Displays static images using URLs provided in the 'images' array.",
+    "panorama": "Optimized for wide images; supports arrays of images per name with navigation arrows."
+  },
+  "displayMode": "text",
+  "names": [
+	"Huntr/x",
+	"LE SSERAFIM",
+	"NMIXX",
+	"Jennie",
+	"Meovv",
+	"aespa",
+	"Babymonster",
+	"Yeji",
+	"TripleS"
+  ],
+  "ids": [
+  ],
+  "images": [
+  ]
+}
