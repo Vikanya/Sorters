@@ -80,7 +80,6 @@
 
         .video-playing { border-color: var(--primary); }
 
-        /* Image Navigation Arrows */
         .img-nav {
             position: absolute; top: 50%; transform: translateY(-50%);
             background: rgba(0,0,0,0.5); color: white; border: none;
@@ -183,12 +182,34 @@ var imgIdxLeft = 0, imgIdxRight = 0;
 async function loadSorterData() {
     const urlParams = new URLSearchParams(window.location.search);
     const dataPath = urlParams.get('data');
-    if (!dataPath) { document.getElementById('battleNumber').innerText = "Error: No data file specified."; return; }
+    
+    const battleLabel = document.getElementById('battleNumber');
+    
+    if (!dataPath) {
+        battleLabel.style.color = "#ff8787";
+        battleLabel.innerText = "ERROR: No data file specified in URL (?data=path/to.json)";
+        return;
+    }
 
     try {
         const response = await fetch(dataPath);
-        const data = await response.json();
-        namMember = data.names || [];
+        
+        if (!response.ok) {
+            throw new Error(`FILE NOT FOUND: ${response.status} (${response.statusText})`);
+        }
+
+        let data;
+        try {
+            data = await response.json();
+        } catch (jsonErr) {
+            throw new Error("INVALID JSON: Make sure your data file is correctly formatted.");
+        }
+        
+        if (!data.names || !Array.isArray(data.names) || data.names.length < 2) {
+            throw new Error("DATA ERROR: 'names' array is missing or contains too few entries.");
+        }
+
+        namMember = data.names;
         videoIds = data.ids || [];
         linkedImages = data.images || [];
         displayMode = data.displayMode || "video";
@@ -199,10 +220,16 @@ async function loadSorterData() {
         document.title = fileName.toUpperCase();
         document.getElementById('page-title').innerText = fileName;
 
-        if (displayMode.includes("video")) { initYouTubePlayers(); } 
-        else { initList(); updateUI(); }
+        if (displayMode.includes("video")) { 
+            initYouTubePlayers(); 
+        } else { 
+            initList(); 
+            updateUI(); 
+        }
     } catch (e) {
-        document.getElementById('battleNumber').innerText = "Error loading JSON.";
+        console.error(e);
+        battleLabel.style.color = "#ff8787";
+        battleLabel.innerText = e.message;
     }
 }
 
@@ -321,7 +348,6 @@ async function updateUI(isUndo = false) {
             if (playerRight.cueVideoById) playerRight.cueVideoById(videoIds[RIdx]);
         }
         
-        // Reset image indices for new question
         imgIdxLeft = 0; imgIdxRight = 0;
 
         if (displayMode === "linked-images" || displayMode === "panorama") {
