@@ -58,15 +58,18 @@
 
     <div class="container">
         <h1>BATTLE LIBRARY</h1>
-        <p id="loading">Scanning Folders...</p>
+        <p id="loading">Scanning Data Files...</p>
         <div id="library-root"></div>
     </div>
 
 <script>
+    // --- SET THESE TO YOUR REPO INFO ---
     const GITHUB_USER = "Vikanya"; 
     const REPO_NAME = "Sorters";
+    const ENGINE_FILE = "sorter_engine.html"; // The name of your single engine file
 
     async function buildLibrary() {
+        // "recursive=1" scans all subfolders
         const url = `https://api.github.com/repos/${GITHUB_USER}/${REPO_NAME}/git/trees/main?recursive=1`;
         const root = document.getElementById('library-root');
         const loading = document.getElementById('loading');
@@ -77,18 +80,17 @@
             
             if (!data.tree) throw new Error("No files found");
 
-            // 1. Filter and sort files alphabetically
-            let sorters = data.tree.filter(item => 
-                item.path.endsWith('.html') && 
-                !item.path.toLowerCase().includes('index.html')
+            // 1. Filter for .json files (our new data format)
+            let dataFiles = data.tree.filter(item => 
+                item.path.endsWith('.json')
             );
             
-            // Files stay in alphabetical order
-            sorters.sort((a, b) => a.path.localeCompare(b.path));
+            // Sort data files alphabetically
+            dataFiles.sort((a, b) => a.path.localeCompare(b.path));
 
             // 2. Group them by folder (Category)
             const categories = {};
-            sorters.forEach(file => {
+            dataFiles.forEach(file => {
                 const parts = file.path.split('/');
                 const category = parts.length > 1 ? parts[0] : "General";
                 if (!categories[category]) categories[category] = [];
@@ -114,13 +116,16 @@
 
                 categories[cat].forEach(file => {
                     const fileName = file.path.split('/').pop();
-                    const cleanName = fileName.replace(/\.html?$/i, '').replace(/[-_]/g, ' ');
+                    const cleanName = fileName.replace(/\.json?$/i, '').replace(/[-_]/g, ' ');
                     
                     const card = document.createElement('a');
-                    card.href = file.path;
+                    
+                    // The link now points to the ENGINE, sending the JSON path as a parameter
+                    card.href = `${ENGINE_FILE}?data=${encodeURIComponent(file.path)}`;
+                    
                     card.className = 'sorter-link';
                     card.innerHTML = `
-                        <div class="icon">🎧</div>
+                        <div class="icon">📊</div>
                         <div class="details">
                             <span class="title">${cleanName}</span>
                             <span class="path">${file.path}</span>
@@ -135,7 +140,7 @@
 
         } catch (error) {
             console.error(error);
-            loading.innerText = "Error: Repository scanning failed.";
+            loading.innerText = "Error: Repository scanning failed. Check Username/Repo.";
         }
     }
 
