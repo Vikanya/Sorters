@@ -1,4 +1,12 @@
 {
+  "_displayMode_guide": {
+    "video": "Standard YouTube battle with default scaling.",
+    "text": "Text-only mode. Hides visual containers and centers large names.",
+    "big-names-video": "Prioritizes names at the top with smaller video players below.",
+    "linked-images": "Displays static images using URLs provided in the 'images' array.",
+    "panorama": "Optimized for wide images; supports arrays of images per name with navigation arrows."
+  },
+  "displayMode": "video",
   "names": [
 "DALL - ARTMS",
 "Assemble24 - TripleS",
@@ -17,5 +25,11 @@
 "YOUTH - Doyoung (of NCT)"
   ],
   "ids": [
+  ],
+  "images": [
+    ["https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?q=80&w=1000", "https://images.unsplash.com/photo-1514525253361-bee8a48740ad?q=80&w=1000"],
+    ["https://images.unsplash.com/photo-1470225620780-dba8ba36b745?q=80&w=1000"],
+    ["https://images.unsplash.com/photo-1493225255756-d9584f8606e9?q=80&w=1000", "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?q=80&w=1000"],
+    ["https://images.unsplash.com/photo-1459749411177-042180ce673c?q=80&w=1000"]
   ]
 }
