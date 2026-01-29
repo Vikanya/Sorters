@@ -6,12 +6,13 @@
     <title>Loading...</title>
     <style>
         :root { 
-            --primary: #D4BEE4; /* Soft Lavender */
-            --accent: #AFE1AF;  /* Mint Green */
-            --bg: #F9F7F7;      /* Off-white/Pastel Grey */
-            --card-bg: #FFFFFF;
-            --text: #4A4A4A;    /* Soft Charcoal */
-            --glow-color: #D4BEE4;
+            --primary: #b197fc; /* Muted Lavender */
+            --accent: #63e6be;  /* Muted Mint */
+            --bg: #1a1b1e;      /* Deep Slate Charcoal */
+            --card-bg: #25262b; /* Slightly lighter slate */
+            --text: #ced4da;    /* Soft Grey */
+            --border: #373a40;
+            --glow-color: rgba(177, 151, 252, 0.4);
         }
         body { 
             font-family: 'Segoe UI', Tahoma, sans-serif; 
@@ -22,72 +23,72 @@
             height: 100vh; overflow: hidden;
         }
         
-        /* Navigation / Settings */
         #top-bar { 
             display: flex; justify-content: space-between; align-items: center;
-            padding: 10px 20px; background: white; border-bottom: 1px solid #eee;
+            padding: 10px 20px; background: #141517; border-bottom: 1px solid var(--border);
         }
         .nav-btn {
-            text-decoration: none; color: var(--text); font-size: 12px; font-weight: bold;
-            padding: 8px 15px; border: 1px solid #ddd; border-radius: 20px; transition: 0.3s;
+            text-decoration: none; color: var(--text); font-size: 11px; font-weight: bold;
+            padding: 6px 14px; border: 1px solid var(--border); border-radius: 8px; transition: 0.2s;
+            text-transform: uppercase; letter-spacing: 1px;
         }
-        .nav-btn:hover { background: var(--primary); color: white; border-color: var(--primary); }
+        .nav-btn:hover { background: var(--primary); color: #000; border-color: var(--primary); }
 
         header { flex: 0 1 auto; padding: 10px; }
-        #progressContainer { width: 95%; height: 6px; background: #eee; margin: 5px auto; border-radius: 5px; }
+        #progressContainer { width: 95%; height: 4px; background: var(--border); margin: 5px auto; border-radius: 5px; }
         #progressBar { width: 0%; height: 100%; background: var(--primary); transition: width 0.3s; }
         
         .battle-area { 
             display: flex; flex: 1 1 auto; justify-content: center; align-items: stretch;
-            gap: 20px; padding: 20px; box-sizing: border-box;
+            gap: 20px; padding: 15px; box-sizing: border-box;
         }
         
         .choice-card { 
             flex: 1; display: flex; flex-direction: column;
-            background: var(--card-bg); border: 1px solid #eee; 
-            border-radius: 25px; padding: 20px; cursor: pointer; 
+            background: var(--card-bg); border: 1px solid var(--border); 
+            border-radius: 18px; padding: 15px; cursor: pointer; 
             transition: all 0.5s cubic-bezier(0.2, 1, 0.3, 1);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
         }
 
-        .choice-card.focus { flex: 2.5; border-color: var(--primary); box-shadow: 0 10px 30px rgba(212, 190, 228, 0.4); }
-        .choice-card.dim { flex: 0.5; opacity: 0.4; filter: grayscale(0.5); }
+        .choice-card.focus { flex: 2.8; border-color: var(--primary); box-shadow: 0 0 30px var(--glow-color); }
+        .choice-card.dim { flex: 0.4; opacity: 0.25; filter: grayscale(0.8) blur(1px); }
 
-        .song-name { font-weight: 600; font-size: 1.6vw; margin-bottom: 15px; color: var(--text); }
+        .song-name { font-weight: 600; font-size: 1.5vw; margin-bottom: 12px; color: #fff; min-height: 2.2em; display: flex; align-items: center; justify-content: center; }
         
         .video-wrapper { 
-            flex: 1; width: 100%; background: #000; border-radius: 18px; 
-            overflow: hidden; border: 4px solid transparent;
+            flex: 1; width: 100%; background: #000; border-radius: 12px; 
+            overflow: hidden; border: 3px solid transparent;
             display: flex; align-items: center; justify-content: center;
         }
         .video-wrapper div, .video-wrapper iframe { width: 100% !important; height: 100% !important; }
         .video-playing { border-color: var(--primary); }
 
-        .middle-controls { display: flex; flex-direction: column; justify-content: center; gap: 12px; width: 140px; }
+        .middle-controls { display: flex; flex-direction: column; justify-content: center; gap: 10px; width: 130px; }
         .btn { 
-            padding: 12px; border: 1px solid #eee; border-radius: 15px; 
-            cursor: pointer; background: white; color: var(--text); 
-            font-size: 11px; font-weight: bold; transition: 0.2s;
+            padding: 10px; border: 1px solid var(--border); border-radius: 10px; 
+            cursor: pointer; background: var(--card-bg); color: var(--text); 
+            font-size: 10px; font-weight: bold; transition: 0.2s;
         }
-        .btn:hover { background: var(--accent); color: white; border-color: var(--accent); }
-        .btn-undo { color: #E79999; }
+        .btn:hover { background: var(--accent); color: #000; border-color: var(--accent); }
+        .btn-undo { color: #ff8787; border-color: rgba(255, 135, 135, 0.2); }
 
-        .instruction-footer { flex: 0 1 auto; padding: 10px; font-size: 11px; color: #AAA; background: white; }
-        .key-cap { color: var(--primary); font-weight: bold; border: 1px solid #eee; padding: 2px 5px; border-radius: 4px; }
+        .instruction-footer { flex: 0 1 auto; padding: 10px; font-size: 10px; color: #5c5f66; background: #141517; }
+        .key-cap { color: var(--primary); font-weight: bold; padding: 0 4px; }
         
-        #resultField { overflow-y: auto; color: var(--text); }
-        table { width: 80%; margin: 20px auto; border-collapse: collapse; border-radius: 15px; overflow: hidden; background: white; }
-        th { background: var(--primary); color: white; padding: 15px; }
-        td { padding: 12px; border-bottom: 1px solid #f5f5f5; }
+        #resultField { overflow-y: auto; background: var(--bg); }
+        table { width: 85%; max-width: 600px; margin: 30px auto; border-collapse: collapse; border-radius: 12px; overflow: hidden; background: var(--card-bg); }
+        th { background: var(--primary); color: #000; padding: 15px; font-weight: bold; text-transform: uppercase; font-size: 12px; }
+        td { padding: 12px; border-bottom: 1px solid var(--border); color: #fff; text-align: center; }
+        tr:last-child td { border: none; }
     </style>
 </head>
 <body>
 
     <div id="top-bar">
-        <a href="../index.html" class="nav-btn" id="portal-link">⇠ PORTAL</a>
+        <a href="../index.html" class="nav-btn" id="portal-link">⇠ Library</a>
         
-        <div style="font-size: 11px;">
-            Layout: <select id="layoutPicker" onchange="changeLayout(this.value)" style="border-radius:10px; padding:2px;">
+        <div>
+            <select id="layoutPicker" onchange="changeLayout(this.value)" style="background: #000; color: #fff; border: 1px solid var(--border); border-radius: 5px; font-size: 10px; padding: 4px;">
                 <option value="AZERTY">AZERTY</option>
                 <option value="QWERTY">QWERTY</option>
             </select>
@@ -95,8 +96,8 @@
     </div>
 
     <header>
-        <h1 id="page-title" style="margin:5px; font-size: 20px; letter-spacing: 1px;">Song Sorter</h1>
-        <div id="battleNumber">Connecting...</div>
+        <h1 id="page-title" style="margin:5px; font-size: 18px; letter-spacing: 2px; text-transform: uppercase; color: var(--primary);">Sorter</h1>
+        <div id="battleNumber" style="font-size: 11px; opacity: 0.6;">Initializing...</div>
         <div id="progressContainer"><div id="progressBar"></div></div>
     </header>
 
@@ -106,11 +107,11 @@
             <div id="wrapperLeft" class="video-wrapper" onclick="event.stopPropagation();">
                 <div id="playerLeft"></div>
             </div>
-            <span class="key-hint" style="margin-top:10px; font-size:11px; opacity:0.6;">[<span class="left-key-label">A</span>] PLAY</span>
+            <span class="key-hint" style="margin-top:10px; font-size:10px; opacity:0.4;">[<span class="left-key-label">A</span>] PLAY</span>
         </div>
 
         <div class="middle-controls">
-            <div class="btn" onclick="if(!finishFlag) sortList(0)">I LIKE BOTH</div>
+            <div class="btn" onclick="if(!finishFlag) sortList(0)">LIKE BOTH</div>
             <div class="btn" onclick="if(!finishFlag) sortList(0)">NO OPINION</div>
             <button id="undoBtn" class="btn btn-undo" onclick="undo()" disabled>UNDO</button>
         </div>
@@ -120,7 +121,7 @@
             <div id="wrapperRight" class="video-wrapper" onclick="event.stopPropagation();">
                 <div id="playerRight"></div>
             </div>
-            <span class="key-hint" style="margin-top:10px; font-size:11px; opacity:0.6;">[<span class="right-key-label">Z</span>] PLAY</span>
+            <span class="key-hint" style="margin-top:10px; font-size:10px; opacity:0.4;">[<span class="right-key-label">Z</span>] PLAY</span>
         </div>
     </div>
 
@@ -131,14 +132,10 @@
     <div id="resultField"></div>
 
 <script>
-
 if (window.location.pathname.split('/').length <= 2) {
     document.getElementById('portal-link').setAttribute('href', 'index.html');
 }
 
-// ==========================================
-// DATA PASTE BOX
-// ==========================================
 var rawNames = `
 Attitude - IVE
 Air - Yeji
@@ -323,14 +320,17 @@ function processChoice(targetCmp, targetHead) {
 function updateUI(isUndo = false) {
     var percent = Math.floor(finishSize * 100 / totalSize);
     document.getElementById("progressBar").style.width = percent + "%";
-    document.getElementById("battleNumber").innerHTML = finishFlag ? "Finished!" : `Question No. ${numQuestion} (${percent}%)`;
+    document.getElementById("battleNumber").innerHTML = finishFlag ? "FINISHED!" : `QUESTION ${numQuestion} (${percent}%)`;
     
     if (!finishFlag) {
         document.getElementById("leftField").innerHTML = namMember[lstMember[cmp1][head1]];
         document.getElementById("rightField").innerHTML = namMember[lstMember[cmp2][head2]];
         
-        document.querySelectorAll('.choice-card').forEach(c => c.className = 'choice-card');
-        document.querySelectorAll('.video-wrapper').forEach(w => w.className = 'video-wrapper');
+        document.querySelectorAll('.choice-card').forEach(c => {
+            c.classList.remove('focus');
+            c.classList.remove('dim');
+        });
+        document.querySelectorAll('.video-wrapper').forEach(w => w.classList.remove('video-playing'));
 
         playerLeft.cueVideoById(videoIds[lstMember[cmp1][head1]]);
         playerRight.cueVideoById(videoIds[lstMember[cmp2][head2]]);

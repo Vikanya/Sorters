@@ -6,49 +6,67 @@
     <title>Sorter Library</title>
     <style>
 		:root {
-			--primary: #D4BEE4;
-			--bg: #F9F7F7;
-			--card-bg: #FFFFFF;
-			--text: #4A4A4A;
+			--primary: #b197fc;
+			--bg: #1a1b1e;
+			--card-bg: #25262b;
+			--text: #ced4da;
+            --border: #373a40;
 		}
-		/* Change Category Title style */
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            padding: 40px 0;
+            margin: 0;
+        }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        h1 { font-size: 2rem; color: var(--primary); letter-spacing: 3px; margin-bottom: 40px; text-transform: uppercase; text-align: center; }
+
+		.category-section { margin-bottom: 50px; }
 		.category-title { 
-			font-size: 1.2rem; color: #9BABB8; border-bottom: 2px solid #EEE; 
-			padding-bottom: 5px; margin-bottom: 20px; font-weight: 300;
+			font-size: 1rem; color: #5c5f66; border-bottom: 1px solid var(--border); 
+			padding-bottom: 8px; margin-bottom: 20px; font-weight: bold; text-transform: uppercase; letter-spacing: 2px;
 		}
-		/* Change sorter-link style */
+
+        /* Grid Logic for Full Display */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
 		.sorter-link {
-			background: var(--card-bg); border: 1px solid #EEE; border-radius: 20px;
-			padding: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.02);
+			background: var(--card-bg); border: 1px solid var(--border); border-radius: 15px;
+			padding: 20px; text-decoration: none; color: #fff; transition: 0.2s;
+            display: flex; align-items: center; gap: 15px;
 		}
 		.sorter-link:hover {
-			border-color: var(--primary); background: #FFF; box-shadow: 0 10px 20px rgba(212,190,228,0.3);
+			border-color: var(--primary); background: #2c2e33; transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
 		}
 		
-		.icon { font-size: 24px; background: #000; padding: 10px; border-radius: 8px; }
-		.details { display: flex; flex-direction: column; }
-		.title { font-size: 1.1rem; font-weight: bold; text-transform: capitalize; }
-		.path { font-size: 0.7rem; color: #555; }
+		.icon { font-size: 24px; background: #141517; padding: 10px; border-radius: 10px; }
+		.details { display: flex; flex-direction: column; overflow: hidden; }
+		.title { font-size: 1rem; font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-transform: capitalize; }
+		.path { font-size: 0.7rem; color: #5c5f66; }
 
-		#loading { font-size: 1.2rem; color: var(--primary); animation: pulse 1.5s infinite; }
+		#loading { font-size: 1rem; color: var(--primary); text-align: center; animation: pulse 1.5s infinite; }
 		@keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <h1>SORTER LIBRARY</h1>
+        <h1>BATTLE LIBRARY</h1>
         <p id="loading">Scanning Folders...</p>
         <div id="library-root"></div>
     </div>
 
 <script>
-    // --- SET THESE TO YOUR REPO INFO ---
     const GITHUB_USER = "Vikanya"; 
     const REPO_NAME = "Sorters";
 
     async function buildLibrary() {
-        // "recursive=1" tells GitHub to look inside every subfolder
         const url = `https://api.github.com/repos/${GITHUB_USER}/${REPO_NAME}/git/trees/main?recursive=1`;
         const root = document.getElementById('library-root');
         const loading = document.getElementById('loading');
@@ -59,11 +77,14 @@
             
             if (!data.tree) throw new Error("No files found");
 
-            // 1. Filter for .html files (excluding index)
-            const sorters = data.tree.filter(item => 
+            // 1. Filter and sort files alphabetically
+            let sorters = data.tree.filter(item => 
                 item.path.endsWith('.html') && 
                 !item.path.toLowerCase().includes('index.html')
             );
+            
+            // Files stay in alphabetical order
+            sorters.sort((a, b) => a.path.localeCompare(b.path));
 
             // 2. Group them by folder (Category)
             const categories = {};
@@ -76,8 +97,10 @@
 
             loading.style.display = 'none';
 
-            // 3. Render the UI
-            for (const cat in categories) {
+            // 3. Render categories in REVERSE order
+            const categoryKeys = Object.keys(categories).sort().reverse();
+
+            categoryKeys.forEach(cat => {
                 const section = document.createElement('div');
                 section.className = 'category-section';
                 
@@ -108,11 +131,11 @@
 
                 section.appendChild(grid);
                 root.appendChild(section);
-            }
+            });
 
         } catch (error) {
             console.error(error);
-            loading.innerText = "Scanning Failed. Check your Username/Repo name.";
+            loading.innerText = "Error: Repository scanning failed.";
         }
     }
 
