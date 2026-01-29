@@ -26,6 +26,7 @@
         #top-bar { 
             display: flex; justify-content: space-between; align-items: center;
             padding: 10px 20px; background: #141517; border-bottom: 1px solid var(--border);
+            z-index: 100;
         }
         .nav-btn {
             text-decoration: none; color: var(--text); font-size: 11px; font-weight: bold;
@@ -48,7 +49,8 @@
             background: var(--card-bg); border: 1px solid var(--border); 
             border-radius: 18px; padding: 15px; cursor: pointer; 
             transition: all 0.5s cubic-bezier(0.2, 1, 0.3, 1);
-            justify-content: center; /* Center content when no video */
+            justify-content: center; overflow: hidden;
+            position: relative;
         }
 
         .choice-card.focus { flex: 2.8; border-color: var(--primary); box-shadow: 0 0 30px var(--glow-color); }
@@ -58,20 +60,46 @@
             font-weight: 600; font-size: 1.8vw; 
             color: #fff; min-height: 2.2em; 
             display: flex; align-items: center; justify-content: center;
-            transition: font-size 0.3s ease;
+            transition: all 0.3s ease; text-align: center;
         }
         
-        /* Fallback for Text-Only: Make font bigger */
-        .text-only .song-name { font-size: 2.5vw; flex: 1; }
+        .mode-text .song-name { font-size: 3vw; flex: 1; }
+        .mode-big-names-video .song-name { font-size: 3.5vw; flex: 2; margin-bottom: 20px; }
+        .mode-big-names-video .visual-container { flex: 1; max-height: 40%; }
 
-        .video-wrapper { 
+        .visual-container { 
             flex: 1; width: 100%; background: #000; border-radius: 12px; 
             overflow: hidden; border: 3px solid transparent;
             display: flex; align-items: center; justify-content: center;
-            margin-top: 10px;
+            position: relative;
         }
-        .video-wrapper div, .video-wrapper iframe { width: 100% !important; height: 100% !important; }
+        
+        .visual-container iframe, .visual-container img { width: 100% !important; height: 100% !important; border: none; }
+        .visual-container img { object-fit: cover; }
+        .mode-panorama .visual-container img { object-fit: contain; background: #000; }
+
         .video-playing { border-color: var(--primary); }
+
+        /* Image Navigation Arrows */
+        .img-nav {
+            position: absolute; top: 50%; transform: translateY(-50%);
+            background: rgba(0,0,0,0.5); color: white; border: none;
+            width: 40px; height: 40px; border-radius: 50%; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 20px; transition: 0.2s; z-index: 5;
+            opacity: 0;
+        }
+        .visual-container:hover .img-nav { opacity: 1; }
+        .img-nav:hover { background: var(--primary); color: #000; }
+        .img-nav.prev { left: 10px; }
+        .img-nav.next { right: 10px; }
+        
+        .img-counter {
+            position: absolute; bottom: 10px; right: 10px;
+            background: rgba(0,0,0,0.6); color: white; padding: 4px 8px;
+            border-radius: 10px; font-size: 10px; font-weight: bold;
+            pointer-events: none;
+        }
 
         .middle-controls { display: flex; flex-direction: column; justify-content: center; gap: 10px; width: 130px; }
         .btn { 
@@ -89,12 +117,11 @@
         table { width: 85%; max-width: 600px; margin: 30px auto; border-collapse: collapse; border-radius: 12px; overflow: hidden; background: var(--card-bg); }
         th { background: var(--primary); color: #000; padding: 15px; font-weight: bold; text-transform: uppercase; font-size: 12px; }
         td { padding: 12px; border-bottom: 1px solid var(--border); color: #fff; text-align: center; }
-        tr:last-child td { border: none; }
         
         .hidden { display: none !important; }
     </style>
 </head>
-<body class="loading-state">
+<body>
 
     <div id="top-bar">
         <a href="index.html" class="nav-btn">⇠ Library</a>
@@ -112,13 +139,16 @@
         <div id="progressContainer"><div id="progressBar"></div></div>
     </header>
 
-    <div class="battle-area">
+    <div class="battle-area" id="battleArena">
         <div id="cardLeft" class="choice-card" onclick="if(!finishFlag) sortList(-1)">
             <div id="leftField" class="song-name">---</div>
-            <div id="wrapperLeft" class="video-wrapper" onclick="event.stopPropagation();">
-                <div id="playerLeft"></div>
+            <div id="wrapperLeft" class="visual-container hidden" onclick="event.stopPropagation();">
+                <button class="img-nav prev hidden" onclick="navigateImages('Left', -1); event.stopPropagation();">‹</button>
+                <div id="contentLeft"></div>
+                <button class="img-nav next hidden" onclick="navigateImages('Left', 1); event.stopPropagation();">›</button>
+                <div id="counterLeft" class="img-counter hidden">1/1</div>
             </div>
-            <span class="key-hint left-hint" style="margin-top:10px; font-size:10px; opacity:0.4;">[<span class="left-key-label">A</span>] PLAY</span>
+            <span id="hintLeft" class="key-hint" style="margin-top:10px; font-size:10px; opacity:0.4;">[<span class="left-key-label">A</span>] PLAY</span>
         </div>
 
         <div class="middle-controls">
@@ -129,10 +159,13 @@
 
         <div id="cardRight" class="choice-card" onclick="if(!finishFlag) sortList(1)">
             <div id="rightField" class="song-name">---</div>
-            <div id="wrapperRight" class="video-wrapper" onclick="event.stopPropagation();">
-                <div id="playerRight"></div>
+            <div id="wrapperRight" class="visual-container hidden" onclick="event.stopPropagation();">
+                <button class="img-nav prev hidden" onclick="navigateImages('Right', -1); event.stopPropagation();">‹</button>
+                <div id="contentRight"></div>
+                <button class="img-nav next hidden" onclick="navigateImages('Right', 1); event.stopPropagation();">›</button>
+                <div id="counterRight" class="img-counter hidden">1/1</div>
             </div>
-            <span class="key-hint right-hint" style="margin-top:10px; font-size:10px; opacity:0.4;">[<span class="right-key-label">Z</span>] PLAY</span>
+            <span id="hintRight" class="key-hint" style="margin-top:10px; font-size:10px; opacity:0.4;">[<span class="right-key-label">Z</span>] PLAY</span>
         </div>
     </div>
 
@@ -143,67 +176,54 @@
     <div id="resultField"></div>
 
 <script>
-// --- GLOBAL DATA ---
-var namMember = [];
-var videoIds = [];
-var hasVideos = false;
+var namMember = [], videoIds = [], linkedImages = [], displayMode = "video"; 
+var playerLeft, playerRight, leftReady = false, rightReady = false;
+var imgIdxLeft = 0, imgIdxRight = 0;
 
-// --- BOOTSTRAP: Load Data from JSON ---
 async function loadSorterData() {
     const urlParams = new URLSearchParams(window.location.search);
     const dataPath = urlParams.get('data');
-    
-    if (!dataPath) {
-        document.getElementById('battleNumber').innerText = "Error: No data file specified.";
-        return;
-    }
+    if (!dataPath) { document.getElementById('battleNumber').innerText = "Error: No data file specified."; return; }
 
     try {
         const response = await fetch(dataPath);
         const data = await response.json();
-        
         namMember = data.names || [];
         videoIds = data.ids || [];
-        
-        // Detect if we actually have videos to show
-        hasVideos = videoIds.length > 0 && videoIds.some(id => id && id.trim() !== "");
+        linkedImages = data.images || [];
+        displayMode = data.displayMode || "video";
 
-        if (!hasVideos) {
-            document.body.classList.add('text-only');
-            document.querySelectorAll('.video-wrapper').forEach(el => el.classList.add('hidden'));
-            document.querySelectorAll('.key-hint').forEach(el => el.classList.add('hidden'));
-            document.getElementById('video-keys-hint').classList.add('hidden');
-        }
+        setupLayoutMode();
 
-        // Update Title
-        const cleanName = dataPath.split('/').pop().replace('.json', '').replace(/[-_]/g, ' ');
-        document.title = cleanName.toUpperCase();
-        document.getElementById('page-title').innerText = cleanName;
+        const fileName = dataPath.split('/').pop().replace('.json', '').replace(/[-_]/g, ' ');
+        document.title = fileName.toUpperCase();
+        document.getElementById('page-title').innerText = fileName;
 
-        if (hasVideos) {
-            initYouTubePlayers();
-        } else {
-            // Skip YT API and start immediately
-            initList();
-            updateUI();
-        }
+        if (displayMode.includes("video")) { initYouTubePlayers(); } 
+        else { initList(); updateUI(); }
     } catch (e) {
-        console.error(e);
-        document.getElementById('battleNumber').innerText = "Error loading data file.";
+        document.getElementById('battleNumber').innerText = "Error loading JSON.";
     }
 }
 
-function changeLayout(val) {
-    const leftKey = (val === "AZERTY") ? "A" : "Q";
-    const rightKey = (val === "AZERTY") ? "Z" : "W";
-    document.querySelectorAll('.left-key-label').forEach(el => el.innerText = leftKey);
-    document.querySelectorAll('.right-key-label').forEach(el => el.innerText = rightKey);
-    document.getElementById('hint-left').innerText = leftKey;
-    document.getElementById('hint-right').innerText = rightKey;
-}
+function setupLayoutMode() {
+    const arena = document.getElementById('battleArena');
+    arena.className = 'battle-area mode-' + displayMode;
+    const isVideo = displayMode.includes("video");
+    const isImage = (displayMode === "linked-images" || displayMode === "panorama");
 
-var playerLeft, playerRight;
-var leftReady = false, rightReady = false;
+    document.querySelectorAll('.visual-container').forEach(el => el.classList.toggle('hidden', !isVideo && !isImage));
+    document.querySelectorAll('.key-hint').forEach(el => el.classList.toggle('hidden', !isVideo));
+    document.getElementById('video-keys-hint').classList.toggle('hidden', !isVideo);
+
+    if (isVideo) {
+        document.getElementById('contentLeft').innerHTML = '<div id="ytPlayerLeft"></div>';
+        document.getElementById('contentRight').innerHTML = '<div id="ytPlayerRight"></div>';
+    } else if (isImage) {
+        document.getElementById('contentLeft').innerHTML = '<img id="imgLeft" src="" alt="">';
+        document.getElementById('contentRight').innerHTML = '<img id="imgRight" src="" alt="">';
+    }
+}
 
 function initYouTubePlayers() {
     var tag = document.createElement('script');
@@ -213,21 +233,11 @@ function initYouTubePlayers() {
 }
 
 function onYouTubeIframeAPIReady() {
-    playerLeft = new YT.Player('playerLeft', { 
-        height: '100%', width: '100%', videoId: '', 
-        playerVars: { 'autoplay': 0, 'controls': 1, 'rel': 0, 'iv_load_policy': 3 },
-        events: { 
-            'onReady': () => { leftReady = true; checkPlayersReady(); },
-            'onStateChange': (e) => handleStateChange(e, 'Left') 
-        }
+    playerLeft = new YT.Player('ytPlayerLeft', { height: '100%', width: '100%', videoId: '', playerVars: { 'autoplay': 0, 'controls': 1, 'rel': 0, 'iv_load_policy': 3 },
+        events: { 'onReady': () => { leftReady = true; checkPlayersReady(); }, 'onStateChange': (e) => handleStateChange(e, 'Left') }
     });
-    playerRight = new YT.Player('playerRight', { 
-        height: '100%', width: '100%', videoId: '', 
-        playerVars: { 'autoplay': 0, 'controls': 1, 'rel': 0, 'iv_load_policy': 3 },
-        events: { 
-            'onReady': () => { rightReady = true; checkPlayersReady(); },
-            'onStateChange': (e) => handleStateChange(e, 'Right')
-        }
+    playerRight = new YT.Player('ytPlayerRight', { height: '100%', width: '100%', videoId: '', playerVars: { 'autoplay': 0, 'controls': 1, 'rel': 0, 'iv_load_policy': 3 },
+        events: { 'onReady': () => { rightReady = true; checkPlayersReady(); }, 'onStateChange': (e) => handleStateChange(e, 'Right') }
     });
 }
 
@@ -237,16 +247,8 @@ function handleStateChange(event, side) {
     const wrapper = document.getElementById('wrapper' + side);
     const card = document.getElementById('card' + side);
     const otherCard = document.getElementById(side === 'Left' ? 'cardRight' : 'cardLeft');
-
-    if (event.data == 1) { // Playing
-        wrapper.classList.add('video-playing');
-        card.classList.add('focus');
-        otherCard.classList.add('dim');
-    } else {
-        wrapper.classList.remove('video-playing');
-        card.classList.remove('focus');
-        otherCard.classList.remove('dim');
-    }
+    if (event.data == 1) { wrapper.classList.add('video-playing'); card.classList.add('focus'); otherCard.classList.add('dim'); } 
+    else { wrapper.classList.remove('video-playing'); card.classList.remove('focus'); otherCard.classList.remove('dim'); }
 }
 
 var lstMember = [], parent = [], equal = [], rec = [], historyStack = [];
@@ -273,104 +275,111 @@ function sortList(flag){
     if (flag < 0) processChoice(cmp1, 'head1');
     else if (flag > 0) processChoice(cmp2, 'head2');
     else { processChoice(cmp1, 'head1'); equal[rec[nrec-1]] = lstMember[cmp2][head2]; processChoice(cmp2, 'head2'); }
-
-    if (head1 < lstMember[cmp1].length && head2 == lstMember[cmp2].length) {
-        while (head1 < lstMember[cmp1].length) processChoice(cmp1, 'head1');
-    } else if (head1 == lstMember[cmp1].length && head2 < lstMember[cmp2].length) {
-        while (head2 < lstMember[cmp2].length) processChoice(cmp2, 'head2');
-    }
-
+    if (head1 < lstMember[cmp1].length && head2 == lstMember[cmp2].length) { while (head1 < lstMember[cmp1].length) processChoice(cmp1, 'head1'); } 
+    else if (head1 == lstMember[cmp1].length && head2 < lstMember[cmp2].length) { while (head2 < lstMember[cmp2].length) processChoice(cmp2, 'head2'); }
     if (head1 == lstMember[cmp1].length && head2 == lstMember[cmp2].length) {
         for (var i=0; i<lstMember[cmp1].length+lstMember[cmp2].length; i++) lstMember[parent[cmp1]][i] = rec[i];
-        lstMember.pop(); lstMember.pop();
-        cmp1 -= 2; cmp2 -= 2; head1 = head2 = nrec = 0;
+        lstMember.pop(); lstMember.pop(); cmp1 -= 2; cmp2 -= 2; head1 = head2 = nrec = 0;
     }
-    if (cmp1 < 0) { finishFlag = 1; updateUI(); showResult(); } 
-    else { updateUI(); }
+    if (cmp1 < 0) { finishFlag = 1; updateUI(); showResult(); } else { updateUI(); }
 }
 
 function processChoice(targetCmp, targetHead) {
-    rec[nrec++] = lstMember[targetCmp][window[targetHead]++];
-    finishSize++;
+    rec[nrec++] = lstMember[targetCmp][window[targetHead]++]; finishSize++;
     while (equal[rec[nrec-1]] != -1) { rec[nrec++] = lstMember[targetCmp][window[targetHead]++]; finishSize++; }
 }
 
-function updateUI(isUndo = false) {
+function navigateImages(side, dir) {
+    const idx = (side === 'Left') ? lstMember[cmp1][head1] : lstMember[cmp2][head2];
+    const group = linkedImages[idx];
+    if (!Array.isArray(group)) return;
+
+    if (side === 'Left') {
+        imgIdxLeft = (imgIdxLeft + dir + group.length) % group.length;
+        document.getElementById('imgLeft').src = group[imgIdxLeft];
+        document.getElementById('counterLeft').innerText = `${imgIdxLeft + 1}/${group.length}`;
+    } else {
+        imgIdxRight = (imgIdxRight + dir + group.length) % group.length;
+        document.getElementById('imgRight').src = group[imgIdxRight];
+        document.getElementById('counterRight').innerText = `${imgIdxRight + 1}/${group.length}`;
+    }
+}
+
+async function updateUI(isUndo = false) {
     var percent = Math.floor(finishSize * 100 / totalSize);
     document.getElementById("progressBar").style.width = percent + "%";
     document.getElementById("battleNumber").innerHTML = finishFlag ? "FINISHED!" : `QUESTION ${numQuestion} (${percent}%)`;
-    
     if (!finishFlag) {
-        document.getElementById("leftField").innerHTML = namMember[lstMember[cmp1][head1]];
-        document.getElementById("rightField").innerHTML = namMember[lstMember[cmp2][head2]];
+        const LIdx = lstMember[cmp1][head1], RIdx = lstMember[cmp2][head2];
+        document.getElementById("leftField").innerHTML = namMember[LIdx];
+        document.getElementById("rightField").innerHTML = namMember[RIdx];
+        document.querySelectorAll('.choice-card').forEach(c => c.classList.remove('focus', 'dim'));
+        document.querySelectorAll('.visual-container').forEach(w => w.classList.remove('video-playing'));
         
-        document.querySelectorAll('.choice-card').forEach(c => {
-            c.classList.remove('focus');
-            c.classList.remove('dim');
-        });
-        document.querySelectorAll('.video-wrapper').forEach(w => w.classList.remove('video-playing'));
+        if (displayMode.includes("video")) {
+            if (playerLeft.cueVideoById) playerLeft.cueVideoById(videoIds[LIdx]);
+            if (playerRight.cueVideoById) playerRight.cueVideoById(videoIds[RIdx]);
+        }
+        
+        // Reset image indices for new question
+        imgIdxLeft = 0; imgIdxRight = 0;
 
-        if (hasVideos) {
-            const leftId = videoIds[lstMember[cmp1][head1]];
-            const rightId = videoIds[lstMember[cmp2][head2]];
+        if (displayMode === "linked-images" || displayMode === "panorama") {
+            const setupImgs = (side, idx) => {
+                const group = linkedImages[idx];
+                const isArr = Array.isArray(group);
+                const url = isArr ? group[0] : group;
+                const count = isArr ? group.length : 1;
+                
+                document.getElementById('img' + side).src = url || '';
+                document.getElementById('counter' + side).innerText = `1/${count}`;
+                document.getElementById('counter' + side).classList.toggle('hidden', count <= 1);
+                document.getElementById('wrapper' + side).querySelectorAll('.img-nav').forEach(btn => {
+                    btn.classList.toggle('hidden', count <= 1);
+                });
+            };
             
-            if (leftId) playerLeft.cueVideoById(leftId);
-            if (rightId) playerRight.cueVideoById(rightId);
+            setupImgs('Left', LIdx);
+            setupImgs('Right', RIdx);
         }
         
         if (!isUndo) numQuestion++;
     }
 }
 
-function saveState() {
-    historyStack.push(JSON.parse(JSON.stringify({lstMember, parent, equal, rec, cmp1, cmp2, head1, head2, nrec, numQuestion, finishSize})));
-    document.getElementById("undoBtn").disabled = false;
+function changeLayout(val) {
+    const lK = (val === "AZERTY") ? "A" : "Q", rK = (val === "AZERTY") ? "Z" : "W";
+    document.querySelectorAll('.left-key-label').forEach(el => el.innerText = lK);
+    document.querySelectorAll('.right-key-label').forEach(el => el.innerText = rK);
+    document.getElementById('hint-left').innerText = lK; document.getElementById('hint-right').innerText = rK;
 }
 
+function saveState() { historyStack.push(JSON.parse(JSON.stringify({lstMember, parent, equal, rec, cmp1, cmp2, head1, head2, nrec, numQuestion, finishSize, imgIdxLeft, imgIdxRight}))); document.getElementById("undoBtn").disabled = false; }
 function undo() {
     if (historyStack.length === 0) return;
-    var s = historyStack.pop();
-    Object.assign(window, s);
-    finishFlag = 0; numQuestion--;
-    document.getElementById("resultField").innerHTML = "";
-    if (historyStack.length === 0) document.getElementById("undoBtn").disabled = true;
+    var s = historyStack.pop(); Object.assign(window, s); finishFlag = 0; numQuestion--;
+    document.getElementById("resultField").innerHTML = ""; if (historyStack.length === 0) document.getElementById("undoBtn").disabled = true;
     updateUI(true);
 }
 
-function togglePlayer(player) {
-    if (!player || !player.getPlayerState) return;
-    var state = player.getPlayerState();
-    if (state === 1) player.pauseVideo();
-    else player.playVideo();
-}
+function togglePlayer(player) { if (!player || !player.getPlayerState) return; if (player.getPlayerState() === 1) player.pauseVideo(); else player.playVideo(); }
 
 function showResult() {
     var ranking = 1, sameRank = 1, str = "<table><tr><th>Rank</th><th>Name</th></tr>";
     for (var i=0; i<namMember.length; i++) {
-        var idx = lstMember[0][i];
-        str += `<tr><td>${ranking}</td><td>${namMember[idx]}</td></tr>`;
-        if (i < namMember.length - 1) {
-            if (equal[idx] == lstMember[0][i+1]) sameRank++;
-            else { ranking += sameRank; sameRank = 1; }
-        }
+        var idx = lstMember[0][i]; str += `<tr><td>${ranking}</td><td>${namMember[idx]}</td></tr>`;
+        if (i < namMember.length - 1) { if (equal[idx] == lstMember[0][i+1]) sameRank++; else { ranking += sameRank; sameRank = 1; } }
     }
-    document.querySelector('.battle-area').style.display = 'none';
+    document.getElementById('battleArena').classList.add('hidden');
     document.getElementById("resultField").innerHTML = str + "</table>";
 }
 
 window.addEventListener('keydown', (e) => {
     if (e.target.tagName == 'INPUT' || e.target.tagName == 'TEXTAREA') return;
     if (e.ctrlKey && e.key === 'z') { undo(); return; }
-    
-    if (hasVideos) {
-        if (e.code === 'KeyQ') togglePlayer(playerLeft);
-        if (e.code === 'KeyW') togglePlayer(playerRight);
-    }
-    
+    if (displayMode.includes("video")) { if (e.code === 'KeyQ') togglePlayer(playerLeft); if (e.code === 'KeyW') togglePlayer(playerRight); }
     if (finishFlag) return;
-    if (e.key === 'ArrowLeft') sortList(-1);
-    if (e.key === 'ArrowRight') sortList(1);
-    if (e.key === 'ArrowDown') sortList(0);
+    if (e.key === 'ArrowLeft') sortList(-1); if (e.key === 'ArrowRight') sortList(1); if (e.key === 'ArrowDown') sortList(0);
 });
 
 loadSorterData();
