@@ -21,34 +21,34 @@
             padding: 0; margin: 0; 
             display: flex; flex-direction: column;
             height: 100vh; 
-            height: 100dvh; /* Use dynamic viewport height for mobile browsers */
+            height: 100dvh; 
             overflow: hidden;
         }
         
         #top-bar { 
             display: flex; justify-content: space-between; align-items: center;
-            padding: 10px 20px; background: #141517; border-bottom: 1px solid var(--border);
+            padding: 8px 20px; background: #141517; border-bottom: 1px solid var(--border);
             z-index: 100;
             flex-shrink: 0;
         }
         .nav-btn {
             text-decoration: none; color: var(--text); font-size: 11px; font-weight: bold;
-            padding: 6px 14px; border: 1px solid var(--border); border-radius: 8px; transition: 0.2s;
+            padding: 5px 12px; border: 1px solid var(--border); border-radius: 8px; transition: 0.2s;
             text-transform: uppercase; letter-spacing: 1px;
         }
         .nav-btn:hover { background: var(--primary); color: #000; border-color: var(--primary); }
 
-        header { flex-shrink: 0; padding: 10px 20px 5px 20px; }
-        #progressContainer { width: 100%; height: 4px; background: var(--border); margin: 5px auto; border-radius: 5px; }
+        header { flex-shrink: 0; padding: 8px 20px 0 20px; }
+        #progressContainer { width: 100%; height: 4px; background: var(--border); margin: 4px auto; border-radius: 5px; }
         #progressBar { width: 0%; height: 100%; background: var(--primary); transition: width 0.3s; }
         
         .battle-area { 
             display: flex; 
-            flex: 1; /* Take up all available remaining vertical space */
+            flex: 1; 
             justify-content: center; 
             align-items: stretch;
-            gap: 20px; 
-            padding: 10px 20px 20px 20px; /* Balanced padding */
+            gap: 15px; 
+            padding: 10px 15px 10px 15px; 
             box-sizing: border-box;
             overflow: hidden;
         }
@@ -56,36 +56,35 @@
         .choice-card { 
             flex: 1; display: flex; flex-direction: column;
             background: var(--card-bg); border: 1px solid var(--border); 
-            border-radius: 18px; padding: 15px; cursor: pointer; 
+            border-radius: 18px; padding: 12px; cursor: pointer; 
             transition: all 0.5s cubic-bezier(0.2, 1, 0.3, 1);
             position: relative;
             overflow: hidden;
         }
 
-        .choice-card.focus { flex: 2.8; border-color: var(--primary); box-shadow: 0 0 30px var(--glow-color); }
-        .choice-card.dim { flex: 0.4; opacity: 0.25; filter: grayscale(0.8) blur(1px); }
+        .choice-card.focus { flex: 3; border-color: var(--primary); box-shadow: 0 0 30px var(--glow-color); }
+        .choice-card.dim { flex: 0.35; opacity: 0.2; filter: grayscale(0.8) blur(1px); }
 
         .song-name { 
-            font-weight: 600; font-size: 1.8vw; 
-            color: #fff; min-height: 2.2em; 
+            font-weight: 600; font-size: 1.6vw; 
+            color: #fff; min-height: 2em; 
             display: flex; align-items: center; justify-content: center;
             transition: all 0.3s ease; text-align: center;
             flex-shrink: 0;
+            margin-bottom: 5px;
         }
         
         .mode-text .song-name { font-size: 3vw; flex: 1; }
-        .mode-big-names-video .song-name { font-size: 3.5vw; margin-bottom: 10px; }
+        .mode-big-names-video .song-name { font-size: 3vw; margin-bottom: 8px; }
 
         .visual-container { 
             flex: 1; width: 100%; background: #000; border-radius: 12px; 
             overflow: hidden; border: 3px solid transparent;
             display: flex; align-items: center; justify-content: center;
             position: relative;
-            /* Ensures container expands to fill flex parent */
             height: 100%; 
         }
         
-        /* Force inner content to fill container */
         .visual-container > div, 
         .visual-container iframe, 
         .visual-container img { 
@@ -120,20 +119,27 @@
             pointer-events: none;
         }
 
-        .middle-controls { display: flex; flex-direction: column; justify-content: center; gap: 10px; width: 130px; flex-shrink: 0; }
+        .middle-controls { display: flex; flex-direction: column; justify-content: center; gap: 8px; width: 125px; flex-shrink: 0; }
         .btn { 
-            padding: 10px; border: 1px solid var(--border); border-radius: 10px; 
+            padding: 8px; border: 1px solid var(--border); border-radius: 10px; 
             cursor: pointer; background: var(--card-bg); color: var(--text); 
             font-size: 10px; font-weight: bold; transition: 0.2s;
         }
         .btn:hover { background: var(--accent); color: #000; border-color: var(--accent); }
         .btn-undo { color: #ff8787; border-color: rgba(255, 135, 135, 0.2); }
 
-        .instruction-footer { flex-shrink: 0; padding: 10px; font-size: 10px; color: #5c5f66; background: #141517; }
+        .instruction-footer { 
+            flex-shrink: 0; 
+            padding: 5px 10px; 
+            font-size: 10px; 
+            color: #5c5f66; 
+            background: #141517; 
+            border-top: 1px solid var(--border);
+        }
         .key-cap { color: var(--primary); font-weight: bold; padding: 0 4px; }
         
         #resultField { overflow-y: auto; background: var(--bg); flex: 1; }
-        table { width: 85%; max-width: 600px; margin: 30px auto; border-collapse: collapse; border-radius: 12px; overflow: hidden; background: var(--card-bg); }
+        table { width: 85%; max-width: 600px; margin: 20px auto; border-collapse: collapse; border-radius: 12px; overflow: hidden; background: var(--card-bg); }
         th { background: var(--primary); color: #000; padding: 15px; font-weight: bold; text-transform: uppercase; font-size: 12px; }
         td { padding: 12px; border-bottom: 1px solid var(--border); color: #fff; text-align: center; }
         
@@ -153,8 +159,8 @@
     </div>
 
     <header>
-        <h1 id="page-title" style="margin:5px; font-size: 18px; letter-spacing: 2px; text-transform: uppercase; color: var(--primary);">Loading...</h1>
-        <div id="battleNumber" style="font-size: 11px; opacity: 0.6;">Checking Data...</div>
+        <h1 id="page-title" style="margin:2px 0; font-size: 16px; letter-spacing: 2px; text-transform: uppercase; color: var(--primary);">Loading...</h1>
+        <div id="battleNumber" style="font-size: 10px; opacity: 0.6; line-height: 1;">Checking Data...</div>
         <div id="progressContainer"><div id="progressBar"></div></div>
     </header>
 
@@ -167,7 +173,7 @@
                 <button class="img-nav next hidden" onclick="navigateImages('Left', 1); event.stopPropagation();">›</button>
                 <div id="counterLeft" class="img-counter hidden">1/1</div>
             </div>
-            <span id="hintLeft" class="key-hint" style="margin-top:10px; font-size:10px; opacity:0.4;">[<span class="left-key-label">A</span>] PLAY</span>
+            <span id="hintLeft" class="key-hint" style="margin-top:5px; font-size:9px; opacity:0.3;">[<span class="left-key-label">A</span>] PLAY</span>
         </div>
 
         <div class="middle-controls">
@@ -184,7 +190,7 @@
                 <button class="img-nav next hidden" onclick="navigateImages('Right', 1); event.stopPropagation();">›</button>
                 <div id="counterRight" class="img-counter hidden">1/1</div>
             </div>
-            <span id="hintRight" class="key-hint" style="margin-top:10px; font-size:10px; opacity:0.4;">[<span class="right-key-label">Z</span>] PLAY</span>
+            <span id="hintRight" class="key-hint" style="margin-top:5px; font-size:9px; opacity:0.3;">[<span class="right-key-label">Z</span>] PLAY</span>
         </div>
     </div>
 
@@ -235,6 +241,7 @@ async function loadSorterData() {
         if (displayMode.includes("video")) initYouTubePlayers(); 
         else { initList(); updateUI(); }
     } catch (e) {
+        console.error(e);
         battleLabel.style.color = "#ff8787";
         battleLabel.innerText = e.message;
     }
