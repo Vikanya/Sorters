@@ -90,11 +90,12 @@
         .mode-big-names-video .song-name { font-size: 2.5vw; margin-bottom: 8px; }
 
         .visual-container { 
-            flex: 1; width: 100%; background: #000; border-radius: 12px; 
+            flex: 1; width: 100%; border-radius: 12px; 
             overflow: hidden; border: 3px solid transparent;
             display: flex; align-items: center; justify-content: center;
             position: relative;
             height: 100%; 
+            background: transparent; /* Changed from #000 to avoid grey/black strips */
         }
         
         .visual-container > div, 
@@ -109,30 +110,34 @@
         /* Ensure images fit without cropping while preserving aspect ratio */
         .visual-container img { object-fit: contain; }
         /* Video iframes still fill the container width/height */
-        .visual-container iframe { object-fit: cover; }
+        .visual-container iframe { object-fit: cover; background: #000; }
         
-        .mode-panorama .visual-container img { object-fit: contain; background: #000; }
+        .mode-panorama .visual-container img { object-fit: contain; background: transparent; }
 
         .video-playing { border-color: var(--primary); }
 
+        /* Navigation Arrows: Simplified to remove circular grey background */
         .img-nav {
             position: absolute; top: 50%; transform: translateY(-50%);
-            background: rgba(0,0,0,0.5); color: white; border: none;
-            width: 40px; height: 40px; border-radius: 50%; cursor: pointer;
+            background: none; color: white; border: none;
+            width: 50px; height: 100%; cursor: pointer;
             display: flex; align-items: center; justify-content: center;
-            font-size: 20px; transition: 0.2s; z-index: 5;
+            font-size: 40px; transition: 0.2s; z-index: 5;
             opacity: 0;
+            text-shadow: 0 0 10px rgba(0,0,0,0.8), 0 0 20px rgba(0,0,0,0.5);
+            -webkit-tap-highlight-color: transparent;
         }
         .visual-container:hover .img-nav { opacity: 1; }
-        .img-nav:hover { background: var(--primary); color: #000; }
-        .img-nav.prev { left: 10px; }
-        .img-nav.next { right: 10px; }
+        .img-nav:hover { color: var(--primary); scale: 1.1; }
+        .img-nav.prev { left: 0; }
+        .img-nav.next { right: 0; }
         
         .img-counter {
             position: absolute; bottom: 10px; right: 10px;
-            background: rgba(0,0,0,0.6); color: white; padding: 4px 8px;
+            background: rgba(0,0,0,0.4); color: white; padding: 4px 8px;
             border-radius: 10px; font-size: 10px; font-weight: bold;
             pointer-events: none;
+            backdrop-filter: blur(2px);
         }
 
         .middle-controls { display: flex; flex-direction: column; justify-content: center; gap: 8px; width: 125px; flex-shrink: 0; }
