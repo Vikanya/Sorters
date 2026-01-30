@@ -113,9 +113,14 @@
         }
         
         .visual-container img { object-fit: contain; }
-        .visual-container iframe[id^="yt"] { object-fit: cover; background: #000; }
         
-        /* Social Media Wrapper: Allows content to take height and scroll without squashing */
+        /* YouTube specific: fill container with cover to hide bars */
+        .visual-container iframe[id^="yt"] { 
+            object-fit: cover; 
+            background: #000; 
+        }
+        
+        /* Social Media Wrapper: Allow content to define height and scroll instead of squashing */
         .social-wrapper {
             width: 100% !important;
             height: 100% !important;
@@ -148,14 +153,14 @@
             max-width: 600px;
         }
         
-        /* SoundCloud specific: Force Visual Mode to take space */
+        /* SoundCloud specific height */
         .social-wrapper iframe[src*="soundcloud.com"] {
             height: 90% !important;
             min-height: 300px;
             width: 100% !important;
         }
 
-        /* Twitter specific */
+        /* Twitter specific height logic */
         .twitter-tweet {
             margin: auto !important;
             height: auto !important;
@@ -402,7 +407,7 @@ function renderSubMedia(side, group, index) {
 
     const isSC = typeof item === 'string' && item.includes('soundcloud.com');
     const isIG = typeof item === 'string' && item.includes('instagram.com');
-    const isReddit = typeof item === 'string' && item.includes('reddit.com');
+    const isReddit = typeof item === 'string' && (item.includes('reddit.com') || item.includes('redd.it'));
     const isTwitter = typeof item === 'string' && (item.includes('twitter.com') || item.includes('x.com'));
     const isImg = typeof item === 'string' && item.trim().startsWith('http') && !isSC && !isIG && !isTwitter && !isReddit;
     const isVid = typeof item === 'string' && item.trim().length > 0 && !isImg && !isSC && !isIG && !isTwitter && !isReddit;
@@ -426,8 +431,10 @@ function renderSubMedia(side, group, index) {
         const embedUrl = cleanUrl.endsWith('/') ? cleanUrl + 'embed/' : cleanUrl + '/embed/';
         content.innerHTML = `<div class="social-wrapper"><iframe src="${embedUrl}" frameborder="0" scrolling="no" allowtransparency="true" allow="encrypted-media"></iframe></div>`;
     } else if (isReddit) {
-        const cleanUrl = item.split(/[?#]/)[0];
-        const embedUrl = cleanUrl.endsWith('/') ? cleanUrl + '?embed=true' : cleanUrl + '/?embed=true';
+        let cleanUrl = item.split(/[?#]/)[0];
+        if (!cleanUrl.endsWith('/')) cleanUrl += '/';
+        // Reddit standard iframe path for posts
+        const embedUrl = cleanUrl + '.embed?theme=dark';
         content.innerHTML = `<div class="social-wrapper"><iframe src="${embedUrl}" frameborder="0" scrolling="no" allowtransparency="true" allow="encrypted-media"></iframe></div>`;
     } else if (isTwitter) {
         content.innerHTML = `<div class="social-wrapper"><div id="tweet-${side}-${index}" style="width:100%; max-width:550px; margin: auto;"></div></div>`;
@@ -470,7 +477,7 @@ function refreshCard(side, index) {
     const isArr = Array.isArray(entry) && entry.length > 0;
     const isSC = typeof entry === 'string' && entry.includes('soundcloud.com');
     const isIG = typeof entry === 'string' && entry.includes('instagram.com');
-    const isReddit = typeof entry === 'string' && entry.includes('reddit.com');
+    const isReddit = typeof entry === 'string' && (entry.includes('reddit.com') || entry.includes('redd.it'));
     const isTwitter = typeof entry === 'string' && (entry.includes('twitter.com') || entry.includes('x.com'));
     const isImg = typeof entry === 'string' && entry.trim().startsWith('http') && !isSC && !isIG && !isTwitter && !isReddit;
     const isVid = typeof entry === 'string' && entry.trim().length > 0 && !isImg && !isSC && !isIG && !isTwitter && !isReddit;
