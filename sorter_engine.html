@@ -431,10 +431,11 @@ function renderSubMedia(side, group, index) {
         const embedUrl = cleanUrl.endsWith('/') ? cleanUrl + 'embed/' : cleanUrl + '/embed/';
         content.innerHTML = `<div class="social-wrapper"><iframe src="${embedUrl}" frameborder="0" scrolling="no" allowtransparency="true" allow="encrypted-media"></iframe></div>`;
     } else if (isReddit) {
+        // Fix for Reddit SAMEORIGIN error: use embed.reddit.com
         let cleanUrl = item.split(/[?#]/)[0];
-        if (!cleanUrl.endsWith('/')) cleanUrl += '/';
-        // Reddit standard iframe path for posts
-        const embedUrl = cleanUrl + '.embed?theme=dark';
+        let embedUrl = cleanUrl.replace('www.reddit.com', 'embed.reddit.com').replace('reddit.com', 'embed.reddit.com');
+        const separator = embedUrl.includes('?') ? '&' : '?';
+        embedUrl += separator + 'embed=true&theme=dark';
         content.innerHTML = `<div class="social-wrapper"><iframe src="${embedUrl}" frameborder="0" scrolling="no" allowtransparency="true" allow="encrypted-media"></iframe></div>`;
     } else if (isTwitter) {
         content.innerHTML = `<div class="social-wrapper"><div id="tweet-${side}-${index}" style="width:100%; max-width:550px; margin: auto;"></div></div>`;
