@@ -97,6 +97,8 @@
             background: transparent;
         }
         
+        /* Force internal containers and media to fill available space */
+        .visual-container > div[id^="content"],
         .visual-container iframe, 
         .visual-container img { 
             width: 100% !important; 
@@ -105,17 +107,20 @@
             display: block;
         }
         
+        /* Images fit without cropping */
         .visual-container img { object-fit: contain; }
+        
+        /* Videos fill container */
         .visual-container iframe { object-fit: cover; background: #000; }
 
         .video-playing { border-color: var(--primary); }
 
         .img-nav {
-            position: absolute; top: 50%; transform: translateY(-50%);
+            position: absolute; top: 0; bottom: 0;
             background: none; color: white; border: none;
-            width: 50px; height: 100%; cursor: pointer;
+            width: 60px; cursor: pointer;
             display: flex; align-items: center; justify-content: center;
-            font-size: 40px; transition: 0.2s; z-index: 5;
+            font-size: 40px; transition: 0.2s; z-index: 10;
             opacity: 0;
             text-shadow: 0 0 10px rgba(0,0,0,0.8), 0 0 20px rgba(0,0,0,0.5);
             -webkit-tap-highlight-color: transparent;
@@ -132,6 +137,7 @@
             border-radius: 10px; font-size: 10px; font-weight: bold;
             pointer-events: none;
             text-shadow: 0 0 5px rgba(0,0,0,0.8);
+            z-index: 11;
         }
 
         .middle-controls { display: flex; flex-direction: column; justify-content: center; gap: 8px; width: 125px; flex-shrink: 0; }
@@ -231,24 +237,15 @@ async function loadSorterData() {
     const dataPath = urlParams.get('data');
     const battleLabel = document.getElementById('battleNumber');
     
-    if (!dataPath) {
-        battleLabel.style.color = "#ff8787";
-        battleLabel.innerText = "ERROR: No data file specified.";
-        return;
-    }
+    if (!dataPath) { battleLabel.style.color = "#ff8787"; battleLabel.innerText = "ERROR: No data file."; return; }
 
     try {
         const response = await fetch(dataPath);
-        if (!response.ok) throw new Error(`FILE NOT FOUND: ${response.status}`);
-        
+        if (!response.ok) throw new Error("FILE NOT FOUND");
         const raw = await response.text();
-        const sanitized = raw.replace(/\u00a0/g, ' '); 
-        const data = JSON.parse(sanitized); 
+        const data = JSON.parse(raw.replace(/\u00a0/g, ' ')); 
         
-        if (!data.names || data.names.length < 2) throw new Error("DATA ERROR: Missing 'names'.");
-
-        namMember = data.names;
-        // Accept either 'media' or 'ids' for backward compatibility
+        namMember = data.names || [];
         mediaItems = data.media || data.ids || [];
 
         const fileName = dataPath.split('/').pop().replace('.json', '').replace(/[-_]/g, ' ');
@@ -295,9 +292,7 @@ var lstMember = [], parent = [], equal = [], rec = [], historyStack = [];
 var cmp1, cmp2, head1, head2, nrec, numQuestion, totalSize, finishSize, finishFlag = 0;
 
 function initList(){
-    var n = 0;
-    lstMember[n] = namMember.map((_, i) => i);
-    parent[n] = -1; totalSize = 0; n++;
+    var n = 0; lstMember[n] = namMember.map((_, i) => i); parent[n] = -1; totalSize = 0; n++;
     for (var i=0; i<lstMember.length; i++) {
         if(lstMember[i].length>=2) {
             var mid = Math.ceil(lstMember[i].length/2);
@@ -352,8 +347,7 @@ async function updateUI(isUndo = false) {
         const LIdx = lstMember[cmp1][head1], RIdx = lstMember[cmp2][head2];
         document.getElementById("leftField").innerHTML = namMember[LIdx];
         document.getElementById("rightField").innerHTML = namMember[RIdx];
-        refreshCard('Left', LIdx);
-        refreshCard('Right', RIdx);
+        refreshCard('Left', LIdx); refreshCard('Right', RIdx);
         if (!isUndo) numQuestion++;
     }
 }
@@ -363,37 +357,32 @@ function refreshCard(side, index) {
     const wrapper = document.getElementById('wrapper' + side);
     const content = document.getElementById('content' + side);
     const hint = document.getElementById('hint' + side);
-    const mediaEntry = mediaItems[index];
+    const entry = mediaItems[index];
 
-    card.className = 'choice-card';
-    wrapper.classList.add('hidden');
-    hint.classList.add('hidden');
-    content.innerHTML = ''; 
+    card.className = 'choice-card'; wrapper.classList.add('hidden'); hint.classList.add('hidden'); content.innerHTML = ''; 
 
-    // Determine type: Array (multi-image), String starts with http (image), String else (video), Empty (text)
-    const isMultiImage = Array.isArray(mediaEntry) && mediaEntry.length > 0;
-    const isSingleImage = typeof mediaEntry === 'string' && mediaEntry.trim().startsWith('http');
-    const isVideo = typeof mediaEntry === 'string' && mediaEntry.trim().length > 0 && !mediaEntry.trim().startsWith('http');
+    const isArr = Array.isArray(entry) && entry.length > 0;
+    const isImg = typeof entry === 'string' && entry.trim().startsWith('http');
+    const isVid = typeof entry === 'string' && entry.trim().length > 0 && !entry.trim().startsWith('http');
 
-    if (isVideo) {
+    if (isVid) {
         wrapper.classList.remove('hidden'); hint.classList.remove('hidden');
         content.innerHTML = `<div id="ytIframe${side}"></div>`;
-        const rawId = mediaEntry.trim();
+        const rawId = entry.trim();
         new YT.Player(`ytIframe${side}`, {
             height: '100%', width: '100%', videoId: rawId.split(/[?&]/)[0],
             playerVars: { 'autoplay': 0, 'controls': 1, 'start': (rawId.match(/[?&]t=([0-9]+)/) || [0,0])[1] },
             events: { 'onStateChange': (e) => handleStateChange(e, side) }
         });
-    } else if (isMultiImage || isSingleImage) {
+    } else if (isArr || isImg) {
         wrapper.classList.remove('hidden');
-        const images = isMultiImage ? mediaEntry : [mediaEntry];
+        const images = isArr ? entry : [entry];
         content.innerHTML = `<img id="img${side}" src="${images[0]}" alt="">`;
         const isMulti = images.length > 1;
         wrapper.querySelector('.prev').classList.toggle('hidden', !isMulti);
         wrapper.querySelector('.next').classList.toggle('hidden', !isMulti);
         const counter = document.getElementById('counter' + side);
-        counter.classList.toggle('hidden', !isMulti);
-        counter.innerText = `1/${images.length}`;
+        counter.classList.toggle('hidden', !isMulti); counter.innerText = `1/${images.length}`;
         if(side === 'Left') imgIdxLeft = 0; else imgIdxRight = 0;
     } else { 
         card.classList.add('card-text-only'); 
@@ -425,8 +414,7 @@ function showResult() {
     }
     document.getElementById('battleArena').style.display = 'none';
     document.getElementById('main-footer').style.display = 'none';
-    const res = document.getElementById("resultField");
-    res.style.display = 'block'; res.innerHTML = str + "</table>";
+    const res = document.getElementById("resultField"); res.style.display = 'block'; res.innerHTML = str + "</table>";
 }
 
 window.addEventListener('keydown', (e) => {
