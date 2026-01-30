@@ -6,7 +6,7 @@
     "linked-images": "Displays static images using URLs provided in the 'images' array.",
     "panorama": "Optimized for wide images; supports arrays of images per name with navigation arrows."
   },
-  "displayMode": "linked-images",
+  "displayMode": "panorama",
   "names": [
 	"DALL - ARTMS",
 	"Assemble24 - TripleS",
