@@ -110,8 +110,15 @@
         /* Images fit without cropping */
         .visual-container img { object-fit: contain; }
         
-        /* Videos and SoundCloud embeds fill container */
+        /* Videos, SoundCloud, and Social embeds fill container */
         .visual-container iframe { object-fit: cover; background: #000; }
+        
+        /* Social Media Specific adjustments */
+        .visual-container .twitter-tweet-rendered { 
+            margin: auto !important; 
+            max-height: 100% !important;
+            overflow-y: auto !important;
+        }
 
         .video-playing { border-color: var(--primary); }
 
@@ -252,10 +259,18 @@ async function loadSorterData() {
         document.title = fileName.toUpperCase();
         document.getElementById('page-title').innerText = fileName;
 
-        var tag = document.createElement('script');
-        tag.src = "https://www.youtube.com/iframe_api";
-        var firstScriptTag = document.getElementsByTagName('script')[0];
-        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+        // Load YouTube API
+        var ytTag = document.createElement('script');
+        ytTag.src = "https://www.youtube.com/iframe_api";
+        document.getElementsByTagName('script')[0].parentNode.insertBefore(ytTag, document.getElementsByTagName('script')[0]);
+
+        // Load Twitter Widgets API
+        var twTag = document.createElement('script');
+        twTag.src = "https://platform.twitter.com/widgets.js";
+        twTag.charset = "utf-8";
+        twTag.async = true;
+        document.getElementsByTagName('script')[0].parentNode.insertBefore(twTag, document.getElementsByTagName('script')[0]);
+
     } catch (e) {
         battleLabel.style.color = "#ff8787";
         battleLabel.innerText = "LOAD ERROR: Check JSON.";
@@ -345,8 +360,10 @@ function renderSubMedia(side, group, index) {
     const item = group[index];
 
     const isSC = typeof item === 'string' && item.includes('soundcloud.com');
-    const isImg = typeof item === 'string' && item.trim().startsWith('http') && !isSC;
-    const isVid = typeof item === 'string' && item.trim().length > 0 && !isImg && !isSC;
+    const isIG = typeof item === 'string' && item.includes('instagram.com');
+    const isTwitter = typeof item === 'string' && (item.includes('twitter.com') || item.includes('x.com'));
+    const isImg = typeof item === 'string' && item.trim().startsWith('http') && !isSC && !isIG && !isTwitter;
+    const isVid = typeof item === 'string' && item.trim().length > 0 && !isImg && !isSC && !isIG && !isTwitter;
 
     content.innerHTML = '';
     hint.classList.add('hidden');
@@ -362,6 +379,20 @@ function renderSubMedia(side, group, index) {
         });
     } else if (isSC) {
         content.innerHTML = `<iframe scrolling="no" frameborder="no" allow="autoplay" src="https://w.soundcloud.com/player/?url=${encodeURIComponent(item)}&color=%23b197fc&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false&visual=true"></iframe>`;
+    } else if (isIG) {
+        const cleanUrl = item.split(/[?#]/)[0];
+        content.innerHTML = `<iframe src="${cleanUrl.endsWith('/') ? cleanUrl : cleanUrl + '/'}embed/" frameborder="0" scrolling="no" allowtransparency="true"></iframe>`;
+    } else if (isTwitter) {
+        content.innerHTML = `<div id="tweet-${side}-${index}" style="display:flex; justify-content:center; align-items:center; width:100%; height:100%; overflow:auto;"></div>`;
+        if (window.twttr && window.twttr.widgets) {
+            window.twttr.widgets.createTweet(
+                item.split('/').pop().split('?')[0], 
+                document.getElementById(`tweet-${side}-${index}`), 
+                { theme: 'dark', align: 'center', dnt: true }
+            );
+        } else {
+            document.getElementById(`tweet-${side}-${index}`).innerHTML = `<a href="${item}" target="_blank" style="color:var(--primary); font-size:12px;">View on X</a>`;
+        }
     } else if (isImg) {
         content.innerHTML = `<img src="${item}" alt="">`;
     }
@@ -391,12 +422,14 @@ function refreshCard(side, index) {
 
     const isArr = Array.isArray(entry) && entry.length > 0;
     const isSC = typeof entry === 'string' && entry.includes('soundcloud.com');
-    const isImg = typeof entry === 'string' && entry.trim().startsWith('http') && !isSC;
-    const isVid = typeof entry === 'string' && entry.trim().length > 0 && !isImg && !isSC;
+    const isIG = typeof entry === 'string' && entry.includes('instagram.com');
+    const isTwitter = typeof entry === 'string' && (entry.includes('twitter.com') || entry.includes('x.com'));
+    const isImg = typeof entry === 'string' && entry.trim().startsWith('http') && !isSC && !isIG && !isTwitter;
+    const isVid = typeof entry === 'string' && entry.trim().length > 0 && !isImg && !isSC && !isIG && !isTwitter;
 
     if (side === 'Left') subIdxLeft = 0; else subIdxRight = 0;
 
-    if (isVid || isImg || isSC || isArr) {
+    if (isVid || isImg || isSC || isIG || isTwitter || isArr) {
         wrapper.classList.remove('hidden');
         const list = isArr ? entry : [entry];
         const isMulti = list.length > 1;

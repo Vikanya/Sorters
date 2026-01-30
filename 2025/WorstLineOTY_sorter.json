@@ -1,0 +1,35 @@
+{
+  "_guide": {
+    "DYNAMIC_MEDIA": "The system analyzes each index in 'media'.",
+    "Video": "Put the YouTube ID string (e.g., 'u9nP3qXQA4o').",
+    "Single Image": "Put the URL string starting with 'http'.",
+    "Multi-Image": "Put an array of URL strings (e.g., ['http://pic1.jpg', 'http://pic2.jpg']).",
+    "Text Only": "Put an empty string ''."
+  },
+  "names": [
+"\"si c'est moi\" - Bebe - Stayc",
+"\"I slay I slay I slay\" - Girls will Be  - Itzy",
+"\"Gnarly\" et toute son oeuvre - Gnarly - Katseye",
+"\"Mission impossible and they call me Kim Possible\nCall me and beep me, this a situation\nAyy, you know when we pull up, it's lituation (lituation)\n\" - Debut song - KiiKii",
+"\"Jump up, jump up like a pop-up toaster lift\" - Ceremony - Stray Kids",
+"\"This right here is a 100% certified slapper\" - Express Mode - Super Junior",
+"\"Bum no bigger than the girl next door\" - Famous - Allday Project",
+"\"Hot sauce, hot sauce\nEverybody want some, but can't handle what I brought 'em\" (tout le reste de la musique aussi) - Hot sauce - Babymonster",
+"\"Domo arigato, Mr. Roboto\" - Gala - XG",
+"\"It's me, it's me, a little baddie. Just 'cause I'm pretty doesn't mean I don't do hard things\" - Dirty work - Aespa",
+"Let's spin like lassos !"
+  ],
+  "media": [
+"z-xfGoabprU?t=44",
+"1KhOhW_O8-k?t=36",
+"R2-yomhYAj4",
+"UAdxlj4Cgjw?t=56",
+"P7vBoGWoReg?t=24",
+"pykdDgWX7-M?t=5",
+"pShwcQAk7Js?t=16",
+"xn8mQqz2xmM?t=57",
+"8cEdndsuzSE?t=162",
+"M2WTUoy4y6E?t=68",
+"UY7O9d2xos0?t=82"
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "_guide": {
+    "DYNAMIC_MEDIA": "The system analyzes each index in 'media'.",
+    "Video": "Put the YouTube ID string (e.g., 'u9nP3qXQA4o').",
+    "Single Image": "Put the URL string starting with 'http'.",
+    "Multi-Image": "Put an array of URL strings (e.g., ['http://pic1.jpg', 'http://pic2.jpg']).",
+    "Text Only": "Put an empty string ''."
+  },
+  "names": [
+"\"Breaking out of the cage, yeah\" - Jump - Blackpink",
+"\"Making beats for a boring dumb bitch Fucking gnarly (gnarly)\" - Gnarly - Katseye",
+"\"get the hell outside bro\" - I Feel Good - BOYNEXTDOOR",
+"\"TITA TILA TITA TATOUTA\" - Tick-Tack - ILLIT",
+"quasi tout Reality Hurts de NMIXX, extrait:\n\"I can move a mountain range, I don't need magic\nWe're just on another plane, you don't understand it\nI could make the world change, start a new planet\nBut they can't stand it\"Reality hurts",
+"\"Heels, nails, blade, mascara\nFit check for my napalm era\nNeed to beat my face, make it cute and savage\nMirror, mirror on my phone, who's the baddest?\" How it's done - Huntr/x",
+"\"Eat it up, eat it, eat it (whoa)\nEat it up, eat it up\n - Spaghetti - Lesserafim",
+"\"give me MAX, give me the TOP, give me GOOD ENERGY\" - XOXZ - IVE",
+"\"Let bygones be bygones, I ain't never had no problems\nThat high road, we gon' walk over 'cause icons be icons\" - We go up - Babymonster",
+"\"It's a crazy world, I've seen it all, but guess what, I'm crazier\" - Crazier - Boa",
+"\"My mom said to me, \"Find someone who can give you everything\"\nAnd I said, \"Mom, I already have everything\"\nI am a rich man\" - Rich man - aespa",
+"\"Said, he popped tags on my shoppin' spree\nStayed mad when I showed him all the long receipts\nThey laugh, but you crashed out like a comedy\nI can't be your sugar mom, get a job for me, shit\" - Born Again - Lisa, Doja Cat, Raye"
+  ],
+  "media": [
+"CgCVZdcKcqY?t=90",
+"R2-yomhYAj4?t=75",
+"ic31SJ4uK4Y&t=44",
+"-nEGVrzPaiU?t=66",
+"b7zH13uDzPI?t=44",
+"p8iRceeBRXY?t=89",
+"TvVtYaqCni8?t=80",
+"B1ShLiq3EVc?t=34",
+"wlHwjkYpSr0?t=94",
+"H07Zz90QE3E?t=69",
+"5oQVTnq-UKk",
+"kbEC-AGr9n0?t=120"
+  ]
+}
