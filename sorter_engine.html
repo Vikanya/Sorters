@@ -86,9 +86,7 @@
             -webkit-box-orient: vertical;
         }
         
-        /* Local Card State Styles */
         .card-text-only .song-name { font-size: 2.5vw; flex: 1; -webkit-line-clamp: unset; }
-        .card-visual .song-name { flex-shrink: 0; }
 
         .visual-container { 
             flex: 1; width: 100%; border-radius: 12px; 
@@ -120,7 +118,6 @@
             font-size: 40px; transition: 0.2s; z-index: 5;
             opacity: 0;
             text-shadow: 0 0 10px rgba(0,0,0,0.8), 0 0 20px rgba(0,0,0,0.5);
-            -webkit-tap-highlight-color: transparent;
         }
         .visual-container:hover .img-nav { opacity: 1; }
         .img-nav:hover { color: var(--primary); scale: 1.1; }
@@ -188,38 +185,31 @@
     </header>
 
     <div class="battle-area" id="battleArena">
-        <!-- LEFT CARD -->
         <div id="cardLeft" class="choice-card" onclick="if(!finishFlag) sortList(-1)">
             <div id="leftField" class="song-name">---</div>
-            
             <div id="wrapperLeft" class="visual-container hidden" onclick="event.stopPropagation();">
                 <button class="img-nav prev hidden" onclick="navigateImages('Left', -1); event.stopPropagation();">‹</button>
                 <div id="contentLeft"></div>
                 <button class="img-nav next hidden" onclick="navigateImages('Left', 1); event.stopPropagation();">›</button>
                 <div id="counterLeft" class="img-counter hidden">1/1</div>
             </div>
-            
             <span id="hintLeft" class="key-hint" style="margin-top:5px; font-size:9px; opacity:0.3;">[<span class="left-key-label">A</span>] PLAY</span>
         </div>
 
-        <!-- CONTROLS -->
         <div class="middle-controls">
             <div class="btn" onclick="if(!finishFlag) sortList(0)">LIKE BOTH</div>
             <div class="btn" onclick="if(!finishFlag) sortList(0)">NO OPINION</div>
             <button id="undoBtn" class="btn btn-undo" onclick="undo()" disabled>UNDO</button>
         </div>
 
-        <!-- RIGHT CARD -->
         <div id="cardRight" class="choice-card" onclick="if(!finishFlag) sortList(1)">
             <div id="rightField" class="song-name">---</div>
-            
             <div id="wrapperRight" class="visual-container hidden" onclick="event.stopPropagation();">
                 <button class="img-nav prev hidden" onclick="navigateImages('Right', -1); event.stopPropagation();">‹</button>
                 <div id="contentRight"></div>
                 <button class="img-nav next hidden" onclick="navigateImages('Right', 1); event.stopPropagation();">›</button>
                 <div id="counterRight" class="img-counter hidden">1/1</div>
             </div>
-            
             <span id="hintRight" class="key-hint" style="margin-top:5px; font-size:9px; opacity:0.3;">[<span class="right-key-label">Z</span>] PLAY</span>
         </div>
     </div>
@@ -231,7 +221,7 @@
     <div id="resultField"></div>
 
 <script>
-var namMember = [], videoIds = [], linkedImages = [], displayMode = "video"; 
+var namMember = [], videoIds = [], linkedImages = [];
 var playerLeft, playerRight, leftReady = false, rightReady = false;
 var imgIdxLeft = 0, imgIdxRight = 0;
 
@@ -242,7 +232,7 @@ async function loadSorterData() {
     
     if (!dataPath) {
         battleLabel.style.color = "#ff8787";
-        battleLabel.innerText = "ERROR: No data file specified in URL.";
+        battleLabel.innerText = "ERROR: No data file specified.";
         return;
     }
 
@@ -251,36 +241,32 @@ async function loadSorterData() {
         if (!response.ok) throw new Error(`FILE NOT FOUND: ${response.status}`);
         
         const raw = await response.text();
-        const sanitized = raw.replace(/\u00a0/g, ' '); 
-        const data = JSON.parse(sanitized); 
+        const data = JSON.parse(raw.replace(/\u00a0/g, ' ')); 
         
-        if (!data.names || data.names.length < 2) throw new Error("DATA ERROR: Missing 'names'.");
-
-        namMember = data.names;
+        namMember = data.names || [];
         videoIds = data.ids || [];
         linkedImages = data.images || [];
-        displayMode = data.displayMode || "video";
 
         const fileName = dataPath.split('/').pop().replace('.json', '').replace(/[-_]/g, ' ');
         document.title = fileName.toUpperCase();
         document.getElementById('page-title').innerText = fileName;
 
-        // Force load YouTube API even if some cards don't have video (to support mix)
-        initYouTubePlayers(); 
+        // Start YouTube API loading
+        var tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        var firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
     } catch (e) {
         battleLabel.style.color = "#ff8787";
         battleLabel.innerText = "LOAD ERROR: " + e.message;
     }
 }
 
-function initYouTubePlayers() {
-    var tag = document.createElement('script');
-    tag.src = "https://www.youtube.com/iframe_api";
-    var firstScriptTag = document.getElementsByTagName('script')[0];
-    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-}
-
 function onYouTubeIframeAPIReady() {
+    // FIX: Ensure elements exist before creating players
+    document.getElementById('contentLeft').innerHTML = '<div id="ytIframeLeft"></div>';
+    document.getElementById('contentRight').innerHTML = '<div id="ytIframeRight"></div>';
+
     playerLeft = new YT.Player('ytIframeLeft', { 
         height: '100%', width: '100%', videoId: '', 
         playerVars: { 'autoplay': 0, 'controls': 1, 'rel': 0, 'iv_load_policy': 3 },
@@ -291,26 +277,16 @@ function onYouTubeIframeAPIReady() {
         playerVars: { 'autoplay': 0, 'controls': 1, 'rel': 0, 'iv_load_policy': 3 },
         events: { 'onReady': () => { rightReady = true; checkPlayersReady(); }, 'onStateChange': (e) => handleStateChange(e, 'Right') }
     });
-
-    // Create the iframe placeholders
-    document.getElementById('contentLeft').innerHTML = '<div id="ytIframeLeft"></div>';
-    document.getElementById('contentRight').innerHTML = '<div id="ytIframeRight"></div>';
-}
-
-// Minimalistic HTML injection to ensure clean reset
-function resetContentPlaceholder(side) {
-    const cont = document.getElementById('content' + side);
-    cont.innerHTML = ''; 
 }
 
 function checkPlayersReady() { if (leftReady && rightReady) { initList(); updateUI(); } }
 
 function handleStateChange(event, side) {
-    const wrapper = document.getElementById('wrapper' + side);
     const card = document.getElementById('card' + side);
-    const otherCard = document.getElementById(side === 'Left' ? 'cardRight' : 'cardLeft');
-    if (event.data == 1) { wrapper.classList.add('video-playing'); card.classList.add('focus'); otherCard.classList.add('dim'); } 
-    else { wrapper.classList.remove('video-playing'); card.classList.remove('focus'); otherCard.classList.remove('dim'); }
+    const other = document.getElementById(side === 'Left' ? 'cardRight' : 'cardLeft');
+    const wrap = document.getElementById('wrapper' + side);
+    if (event.data == 1) { wrap.classList.add('video-playing'); card.classList.add('focus'); other.classList.add('dim'); } 
+    else { wrap.classList.remove('video-playing'); card.classList.remove('focus'); other.classList.remove('dim'); }
 }
 
 var lstMember = [], parent = [], equal = [], rec = [], historyStack = [];
@@ -355,7 +331,6 @@ function navigateImages(side, dir) {
     const idx = (side === 'Left') ? lstMember[cmp1][head1] : lstMember[cmp2][head2];
     const group = linkedImages[idx];
     if (!Array.isArray(group)) return;
-
     if (side === 'Left') {
         imgIdxLeft = (imgIdxLeft + dir + group.length) % group.length;
         document.getElementById('imgLeft').src = group[imgIdxLeft];
@@ -371,16 +346,12 @@ async function updateUI(isUndo = false) {
     var percent = Math.floor(finishSize * 100 / totalSize);
     document.getElementById("progressBar").style.width = percent + "%";
     document.getElementById("battleNumber").innerHTML = finishFlag ? "FINISHED!" : `QUESTION ${numQuestion} (${percent}%)`;
-    
     if (!finishFlag) {
         const LIdx = lstMember[cmp1][head1], RIdx = lstMember[cmp2][head2];
         document.getElementById("leftField").innerHTML = namMember[LIdx];
         document.getElementById("rightField").innerHTML = namMember[RIdx];
-        
-        // Dynamic detection and refresh for each card
         refreshCard('Left', LIdx);
         refreshCard('Right', RIdx);
-        
         if (!isUndo) numQuestion++;
     }
 }
@@ -392,7 +363,6 @@ function refreshCard(side, index) {
     const hint = document.getElementById('hint' + side);
     const player = (side === 'Left') ? playerLeft : playerRight;
 
-    // Reset visibility and state
     card.className = 'choice-card';
     wrapper.classList.add('hidden');
     hint.classList.add('hidden');
@@ -400,54 +370,30 @@ function refreshCard(side, index) {
 
     const rawId = videoIds[index] || "";
     const rawImg = linkedImages[index] || "";
-
-    // 1. Check for Video
     const isVideo = rawId.length > 0 && !rawId.startsWith('http');
-    // 2. Check for Image (either in ids or images array)
     const imgUrl = (rawId.startsWith('http')) ? rawId : (Array.isArray(rawImg) ? rawImg[0] : rawImg);
     const isImage = imgUrl && imgUrl.startsWith('http');
 
     if (isVideo) {
-        card.classList.add('card-visual');
-        wrapper.classList.remove('hidden');
-        hint.classList.remove('hidden');
+        wrapper.classList.remove('hidden'); hint.classList.remove('hidden');
         content.innerHTML = `<div id="ytIframe${side}"></div>`;
-        
-        // Re-initialize player for this clean slot
-        const newPlayer = new YT.Player(`ytIframe${side}`, {
-            height: '100%', width: '100%',
-            videoId: rawId.split(/[?&]/)[0],
-            playerVars: { 
-                'autoplay': 0, 'controls': 1, 
-                'start': (rawId.match(/[?&]t=([0-9]+)/) || [0,0])[1] 
-            },
+        const nPlayer = new YT.Player(`ytIframe${side}`, {
+            height: '100%', width: '100%', videoId: rawId.split(/[?&]/)[0],
+            playerVars: { 'autoplay': 0, 'controls': 1, 'start': (rawId.match(/[?&]t=([0-9]+)/) || [0,0])[1] },
             events: { 'onStateChange': (e) => handleStateChange(e, side) }
         });
-        if (side === 'Left') playerLeft = newPlayer; else playerRight = newPlayer;
-
+        if (side === 'Left') playerLeft = nPlayer; else playerRight = nPlayer;
     } else if (isImage) {
-        card.classList.add('card-visual');
         wrapper.classList.remove('hidden');
-        
         const group = Array.isArray(rawImg) ? rawImg : [imgUrl];
         content.innerHTML = `<img id="img${side}" src="${group[0]}" alt="">`;
-        
-        // Setup Panorama nav if multiple
-        const navPrev = wrapper.querySelector('.prev');
-        const navNext = wrapper.querySelector('.next');
-        const counter = document.getElementById('counter' + side);
-        
         const isMulti = group.length > 1;
-        if(navPrev) navPrev.classList.toggle('hidden', !isMulti);
-        if(navNext) navNext.classList.toggle('hidden', !isMulti);
-        counter.classList.toggle('hidden', !isMulti);
-        counter.innerText = `1/${group.length}`;
+        wrapper.querySelector('.prev').classList.toggle('hidden', !isMulti);
+        wrapper.querySelector('.next').classList.toggle('hidden', !isMulti);
+        document.getElementById('counter' + side).classList.toggle('hidden', !isMulti);
+        document.getElementById('counter' + side).innerText = `1/${group.length}`;
         if(side === 'Left') imgIdxLeft = 0; else imgIdxRight = 0;
-
-    } else {
-        // Text Only
-        card.classList.add('card-text-only');
-    }
+    } else { card.classList.add('card-text-only'); }
 }
 
 function changeLayout(val) {
@@ -474,8 +420,7 @@ function showResult() {
     document.getElementById('battleArena').style.display = 'none';
     document.getElementById('main-footer').style.display = 'none';
     const res = document.getElementById("resultField");
-    res.style.display = 'block';
-    res.innerHTML = str + "</table>";
+    res.style.display = 'block'; res.innerHTML = str + "</table>";
 }
 
 window.addEventListener('keydown', (e) => {
