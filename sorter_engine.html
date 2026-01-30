@@ -110,8 +110,11 @@
         /* Images fit without cropping */
         .visual-container img { object-fit: contain; }
         
-        /* Videos, SoundCloud, and Social embeds fill container */
-        .visual-container iframe { object-fit: cover; background: #000; }
+        /* YouTube specific: fill container with cover to hide bars */
+        .visual-container iframe[id^="yt"] { 
+            object-fit: cover; 
+            background: #000; 
+        }
         
         /* Social Media Wrapper for scrolling and proper sizing */
         .social-wrapper {
@@ -122,14 +125,19 @@
             display: flex !important;
             flex-direction: column;
             align-items: center;
-            justify-content: flex-start; /* Align to top to ensure scroll works correctly */
+            justify-content: center; /* Center vertically if space allows */
             background: transparent;
         }
+        
+        /* Ensure social media iframes don't use the 'cover' rule */
+        .social-wrapper iframe {
+            object-fit: contain !important;
+            background: transparent !important;
+        }
 
-        /* Target the Twitter-generated iframe to ensure it doesn't collapse */
-        .visual-container .twitter-tweet {
-            margin-top: 0 !important;
-            margin-bottom: 0 !important;
+        /* Target the Twitter-generated widget specifically */
+        .twitter-tweet {
+            margin: auto !important;
         }
 
         .video-playing { border-color: var(--primary); }
@@ -395,7 +403,7 @@ function renderSubMedia(side, group, index) {
         const cleanUrl = item.split(/[?#]/)[0];
         content.innerHTML = `<div class="social-wrapper"><iframe src="${cleanUrl.endsWith('/') ? cleanUrl : cleanUrl + '/'}embed/" frameborder="0" scrolling="no" allowtransparency="true"></iframe></div>`;
     } else if (isTwitter) {
-        content.innerHTML = `<div class="social-wrapper"><div id="tweet-${side}-${index}" style="width:100%; max-width:550px;"></div></div>`;
+        content.innerHTML = `<div class="social-wrapper"><div id="tweet-${side}-${index}" style="width:100%; max-width:550px; margin: auto;"></div></div>`;
         if (window.twttr && window.twttr.widgets) {
             window.twttr.widgets.createTweet(
                 item.split('/').pop().split('?')[0], 
