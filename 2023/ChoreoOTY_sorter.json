@@ -1,0 +1,39 @@
+{
+  "_guide": {
+    "DYNAMIC_MEDIA": "The system analyzes each index in 'media'.",
+    "Video": "Put the YouTube ID string (e.g., 'u9nP3qXQA4o').",
+    "Single Image": "Put the URL string starting with 'http'.",
+    "Multi-Image": "Put an array of URL strings (e.g., ['http://pic1.jpg', 'http://pic2.jpg']).",
+    "Text Only": "Put an empty string ''."
+  },
+  "names": [
+"Fighting - Seventeen BSS ",
+"Firework - &Team",
+"Poppy - Stayc ",
+"Keep me Up - BI",
+"I AM - Ive",
+"Supershy - NewJeans",
+"Under the skin - &Team",
+"Let's dance - Lee Chaeyeon",
+"Knock - Lee Chaeyeon",
+"New Dance - XG",
+"Fast Forward - Somi",
+"Tricky House - xikers",
+"Eve, Psyche & The Bluebeard's Wife - LE SSERAFIM"
+  ],
+  "media": [
+"fti99qRRO5g",
+"eP2euzGmVGQ?t=53",
+"kFw7ZWRydwU?t=44",
+"GAsfbHnhKy4?t=160",
+"0ZzQjfQCkQs?t=55",
+"wU2siJ2c5TA?t=11 ",
+"okwxNXj90Oo",
+"XmCYwALPAdA",
+"KNonnmpcupw",
+"59gxFvO2fqI",
+"QZD9n_dq87E",
+"JcKacGK-YLA",
+"i8aa9aR8srg&t=53s"
+  ]
+}

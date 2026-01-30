@@ -1,0 +1,24 @@
+{
+  "_guide": {
+    "DYNAMIC_MEDIA": "The system analyzes each index in 'media'.",
+    "Video": "Put the YouTube ID string (e.g., 'u9nP3qXQA4o').",
+    "Single Image": "Put the URL string starting with 'http'.",
+    "Multi-Image": "Put an array of URL strings (e.g., ['http://pic1.jpg', 'http://pic2.jpg']).",
+    "Text Only": "Put an empty string ''."
+  },
+  "names": [
+"le départ de Yoo Youngjin et LSM",
+"les pulls avec une seule manche enfilée juste en fait ??? pourquoi ??",
+"la Gen 4 (cont.)",
+"la direction musicale de Hybe (pas toi Less)",
+"les solos de BTS",
+"taemin habillé en écolier frérot t'as 36 ans",
+"fifty fifty qui crash & burn",
+"CA VOUS DERANGE PAS DE FAIRE UN TEASER DE SUPERM ET DE VIRER LSM 2 SEMAINES APRES ???",
+"ref au MBTI dans 50% des tracks",
+"Les refrains minimalistes",
+"Le debut éclaté de Babymonster"
+  ],
+  "media": [
+  ]
+}

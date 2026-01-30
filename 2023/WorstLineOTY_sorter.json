@@ -1,0 +1,28 @@
+{
+  "_guide": {
+    "DYNAMIC_MEDIA": "The system analyzes each index in 'media'.",
+    "Video": "Put the YouTube ID string (e.g., 'u9nP3qXQA4o').",
+    "Single Image": "Put the URL string starting with 'http'.",
+    "Multi-Image": "Put an array of URL strings (e.g., ['http://pic1.jpg', 'http://pic2.jpg']).",
+    "Text Only": "Put an empty string ''."
+  },
+  "names": [
+"Frèreu jacqueu",
+"Sounds like monster maybe king kong (Le Sserafim - Fire in the Belly)",
+"I'm good I'm great because I'm grateful (Key - Good and Great)",
+"I'm a little butterfly (Trouble - EVNNE)",
+"No, I'm sorry, I ain't sorry\naespa, big girls making money (Better Things - aespa)\ncause I am a 10 out of 10 honestly (Spicy - aespa)",
+"You so hot, hot like soup (ISTJ - NCT Dream)",
+"Queencard, I'm hot, my boob my booty's hot [...] I'm twerking on the runway\n[...] Look so cool, look so sexy like Kim Kardashian (uh)\nLook so cute, look so pretty like Ariana\n (Queencard - Gidle)",
+"STOP (I'm throwing my name) call me Mr. Rover\n[...] rover rover rover I'm coming over over over (Rover - Kai)",
+"샤랄랄라 라라 어머나\n샤랄랄라 라라 I'ma shine (Shalala - Taeyong (franchement toute la track))",
+"Welcome to the Stray Kids HOT MEGAVERSE",
+"Sweeter than a chocolate, peanut butter cup\nPeanut butter cup, gonna eat it up\nUp, up, up, up, up, up (TGIF - XG)",
+"Let's speed it up Let's speed it up (Bona Bona - Treasure)",
+"Lip gloss, lip gloss, I want to taste your lip gloss (hey)\nPlumping candy, you make it pop (ooh-ooh, ooh-ooh)\n(Lip Gloss - The Boyz)",
+"Monday, Tuesday, Wednesday, Thursday, Friday\nSeven days a week\nEvery hour, every minute, every second\nYou know night after night\nI'll be fuckin' you right, seven days a week (Jungkook - Seven)"
+  ],
+  "media": [
+  
+  ]
+}

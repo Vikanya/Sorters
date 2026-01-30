@@ -1,0 +1,33 @@
+{
+  "_guide": {
+    "DYNAMIC_MEDIA": "The system analyzes each index in 'media'.",
+    "Video": "Put the YouTube ID string (e.g., 'u9nP3qXQA4o').",
+    "Single Image": "Put the URL string starting with 'http'.",
+    "Multi-Image": "Put an array of URL strings (e.g., ['http://pic1.jpg', 'http://pic2.jpg']).",
+    "Text Only": "Put an empty string ''."
+  },
+  "names": [
+"Shooting Star - XG",
+"Seunghun - CIX (tg flo)",
+"la veste bleue de Keep Me Up - B.I",
+"Better things - aespa",
+"Jisung à 1H55",
+"Soobin pour W Korea",
+"Gyehyeon - VeriVery",
+"I AM - IVE",
+"Hyunjin - Stray Kids",
+"Girls' Capitalism - TripleS LOVElution",
+"Let's Dance - Lee Chaeyeon",
+"Do not touch - MISAMO",
+"Teasers Fact Check - NCT 127",
+"Yuqi pour Elle China",
+"RumPumPum - Viviz",
+"Doxa - Secret Number",
+"Yuma dans War Cry - &team",
+"Karina - Drama",
+"Yeonjun & Soobin - VMA"
+  ],
+  "media": [
+  
+  ]
+}

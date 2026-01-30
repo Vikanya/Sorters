@@ -1,0 +1,39 @@
+{
+  "_guide": {
+    "DYNAMIC_MEDIA": "The system analyzes each index in 'media'.",
+    "Video": "Put the YouTube ID string (e.g., 'u9nP3qXQA4o').",
+    "Single Image": "Put the URL string starting with 'http'.",
+    "Multi-Image": "Put an array of URL strings (e.g., ['http://pic1.jpg', 'http://pic2.jpg']).",
+    "Text Only": "Put an empty string ''."
+  },
+  "names": [
+"TGIF - XG",
+"Do not touch - Misamo",
+"Firework - &team",
+"Tricky House - Xikers",
+"Red Flavor - Red Velvet (Mar Vista Remix)",
+"Good & Great - Key",
+"Bouncy (K-Hot Chilli Peppers) - Ateez ",
+"Shooting Star - XG",
+"Guilty - Taemin",
+"Mark - Golden Hour",
+"Cheshire - Itzy",
+"Grl Gvng - XG",
+"Bubble - StayC"
+  ],
+  "media": [
+"IPxDgf-g9Kw",
+"woKq2sD8xho",
+"uY-lOn0XwBg",
+"HefrSFeMyPs",
+"8kNIMwclEl4",
+"ZYHBKvNUmk0",
+"U0G5OA6ZH5w",
+"L7spCJxloLY",
+"pasRphQvEUE",
+"EUsUqd20c_k",
+"zugAhfd2r0g",
+"Xiai4BRzZpU",
+"3-ptVHZZdBg"
+  ]
+}

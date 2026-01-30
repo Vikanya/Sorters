@@ -1,0 +1,39 @@
+{
+  "_guide": {
+    "DYNAMIC_MEDIA": "The system analyzes each index in 'media'.",
+    "Video": "Put the YouTube ID string (e.g., 'u9nP3qXQA4o').",
+    "Single Image": "Put the URL string starting with 'http'.",
+    "Multi-Image": "Put an array of URL strings (e.g., ['http://pic1.jpg', 'http://pic2.jpg']).",
+    "Text Only": "Put an empty string ''."
+  },
+  "names": [
+"Epik High X Hoshi | Screen time",
+"Lee Chaeyeon & tous les idols en challenge sur Knock",
+"HEARTSTEEL - PARANOIA ft. BAEKHYUN, tobi lou, ØZI, and Cal Scruby",
+"Social Path - Stray Kids ft. LiSA",
+"Topline - Stray Kids ft. Tiger JK",
+"Fighting - Seventeen BSS ft. Lee Youngji",
+"Back for More - TXT ft. Anitta",
+"Love war - Yena ft. Be'o",
+"Nirvana - Kang Daniel ft. pH-1",
+"G.O.A.T (Rap Unit) - Treasure ft. Lee Young Hyun",
+"Beautiful Christmas - Red Velvet & aespa",
+"Eve, Psyche & The Bluebeard’s wife - LE SSERAFIM (Rina Sawayama Remix)",
+"Seven - Jungkook (ft. Latto)"
+  ],
+  "media": [
+"y2H_5gjqv2w",
+"RfJGu2JzChY",
+"MDErQ1KTzaI",
+"M0c04xfBtyc",
+"b3GYcA7j5mg",
+"mBXBOLG06Wc",
+"e42AhJzYpVE",
+"AWIpPQ6z-rk",
+"r4wVoQsJUGw",
+"njYVCXkrCQg",
+"bHekFBpgbd0",
+"W7DOKbGWI9w",
+"QU9c0053UAU"
+  ]
+}

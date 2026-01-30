@@ -1,0 +1,35 @@
+{
+  "_guide": {
+    "DYNAMIC_MEDIA": "The system analyzes each index in 'media'.",
+    "Video": "Put the YouTube ID string (e.g., 'u9nP3qXQA4o').",
+    "Single Image": "Put the URL string starting with 'http'.",
+    "Multi-Image": "Put an array of URL strings (e.g., ['http://pic1.jpg', 'http://pic2.jpg']).",
+    "Text Only": "Put an empty string ''."
+  },
+  "names": [
+"Ringo | Itzy",
+"Do not touch - Misamo",
+"LIKE IT LIKE IT - Secret Number",
+"Hare Hare - TWICE",
+"Firework - &Team",
+"Poppy - STAYC",
+"Jewelry - LE SSERAFIM",
+"hellokittybalahcurrihellokitty美味しい - babyMINT ",
+"Social Path - Stray Kids & LiSA",
+"Classic - Ive",
+"Marshmallow - Misamo"
+  ],
+  "media": [
+  "K0xFPQ2CX5E",
+"woKq2sD8xho",
+"r8uPU6jexdU",
+"-uqWaGzQyxA",
+"uY-lOn0XwBg",
+"YkZvwVf7F9k",
+"Raf9odbiu8g",
+"_yZKR9oXOgQ",
+"M0c04xfBtyc",
+"AmmU6Ifj7-0",
+"gAFgaI5D3Gc"
+  ]
+}

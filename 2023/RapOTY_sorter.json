@@ -1,0 +1,47 @@
+{
+  "_guide": {
+    "DYNAMIC_MEDIA": "The system analyzes each index in 'media'.",
+    "Video": "Put the YouTube ID string (e.g., 'u9nP3qXQA4o').",
+    "Single Image": "Put the URL string starting with 'http'.",
+    "Multi-Image": "Put an array of URL strings (e.g., ['http://pic1.jpg', 'http://pic2.jpg']).",
+    "Text Only": "Put an empty string ''."
+  },
+  "names": [
+"Fast Forward - Somi",
+"Koong - xikers",
+"Rising - TripleS",
+"TGIF - XG",
+"Full Metal Jacket  - Epex",
+"Lalalala - Stray Kids",
+"Galz Xypher - XG",
+"Bona Bona - Treasure",
+"GOAT - Treasure",
+"Eunoia - Billlie",
+"Show You Can - Cocona & Maya",
+"Heartbeat Drum - P1Harmony (Jongseob)",
+"S-Class - Stray Kidz (Han)",
+"Awake - The Boys (Sunwoo)",
+"Tricky House - xikers (Yechan)",
+"Xikey - xikers (Yechan)",
+"Megaverse - SKZ (Changbin & Han)"
+  ],
+  "media": [
+"_GgIt2EFHV8?t=88",
+"CjOTjaTgSw0?t=102",
+"3TQd2ahq6oU?t=92",
+"IPxDgf-g9Kw?t=56",
+"zeSHnvnOfdM?t=67",
+"rwiskJjUjig?t=95",
+"-L4Visli9sA",
+"gxeyC1cPJsA?t=82",
+"njYVCXkrCQg",
+"MVjQIQGqNFM?t=173",
+"Ns-9h13Qt04",
+"i1AZooPN2No?t=86",
+"JsOOis4bBFg?t=87",
+"US8lSu1_Aqc&t=94s",
+"HefrSFeMyPs?t=72",
+"tCKp5Cj4jA0?t=97",
+"JqwPCzJnYyY&t=44s"
+  ]
+}

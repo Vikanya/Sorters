@@ -1,0 +1,36 @@
+{
+  "_guide": {
+    "DYNAMIC_MEDIA": "The system analyzes each index in 'media'.",
+    "Video": "Put the YouTube ID string (e.g., 'u9nP3qXQA4o').",
+    "Single Image": "Put the URL string starting with 'http'.",
+    "Multi-Image": "Put an array of URL strings (e.g., ['http://pic1.jpg', 'http://pic2.jpg']).",
+    "Text Only": "Put an empty string ''."
+  },
+  "names": [
+"Chill Kill - Red Velvet",
+"Unforgiven 'Burn the Bridge' - LE SSERAFIM",
+"Wooyoung - Ateez Spin Off",
+"Les teasers post-mortem de LOONA ",
+"GRL GVNG - XG",
+"Stamp on It - Girl on top",
+"TXT - Temptation (wesh soobin là)",
+"J-Hope",
+"Mood V5 - apoki",
+"expérgo medley - Nmixx",
+"Cherry coke - Yeeun",
+"Unforgiven 'Bloody Rose' - LE SSERAFIM",
+"Unforgiven 'Dewy Sage' - LE SSERAFIM",
+"My World - aespa",
+"Drama - aespa",
+"Yonseung de Verivery - Crazy like that ",
+"TXT - Temptation ",
+"expérgo - Nmixx",
+"gameplan - Somi",
+"BSS (Seventeen) - Second Wind",
+"Either Way - IVE",
+"memoirs of B - Billlie"
+  ],
+  "media": [
+  
+  ]
+}

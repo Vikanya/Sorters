@@ -1,0 +1,45 @@
+{
+  "_guide": {
+    "DYNAMIC_MEDIA": "The system analyzes each index in 'media'.",
+    "Video": "Put the YouTube ID string (e.g., 'u9nP3qXQA4o').",
+    "Single Image": "Put the URL string starting with 'http'.",
+    "Multi-Image": "Put an array of URL strings (e.g., ['http://pic1.jpg', 'http://pic2.jpg']).",
+    "Text Only": "Put an empty string ''."
+  },
+  "names": [
+	"Siren - Riize",
+	"Fighting - BSS",
+	"Knock - Lee Chaeyeon ",
+	"Get A Guitar - Riize",
+	"Rising - TripleS",
+	"Eve, Psyche & the Bluebeard’s wife - LE SSERAFIM",
+	"Guilty - Taemin ",
+	"Ringo | Itzy",
+	"Supershy - NewJeans",
+	"Fast Forward - Somi",
+	"Shooting Star - XG",
+	"Poppy - StayC",
+	"I Am - IVE",
+	"Bouncy (K-Hot Chilli Peppers) - Ateez",
+	"Sugar Rush Ride - TXT (uwu)",
+	"Move - T5"
+],
+  "media": [
+	"tZYsvAoSNxQ?t=46",
+	"fti99qRRO5g?t=70",
+	"KNonnmpcupw",
+	"u_u21u8zIIs?t=36",
+	"hE_5JTRgxrM",
+	"i8aa9aR8srg?t=46",
+	"MWyrdBodwMw?t=57",
+	"5ia_u_Nt3_U",
+	"jeKFPHa9Kec",
+	"DUo9LKTCy9U?t=56",
+	"NNooo5vox8o?t=81",
+	"YkZvwVf7F9k?t=44",
+	"6ZUIwj3FgUY?t=62",
+	"smLc012VUts?t=119",
+	"P9tKTxbgdkk?t=62",
+	"IR8gXjm507Y?t=50"
+  ]
+}

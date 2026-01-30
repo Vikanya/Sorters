@@ -1,0 +1,35 @@
+{
+  "_guide": {
+    "DYNAMIC_MEDIA": "The system analyzes each index in 'media'.",
+    "Video": "Put the YouTube ID string (e.g., 'u9nP3qXQA4o').",
+    "Single Image": "Put the URL string starting with 'http'.",
+    "Multi-Image": "Put an array of URL strings (e.g., ['http://pic1.jpg', 'http://pic2.jpg']).",
+    "Text Only": "Put an empty string ''."
+  },
+  "names": [
+	"Yonseung - Verivery",
+	"Yeonjun - TXT",
+	"B.I ",
+	"Soobin avec les cheveux décolorés là",
+	"Hanbin - ZB1",
+	"Hao - ZB1",
+	"Jisung - NCT ",
+	"Babyzoo",
+	"Wooyoung - Ateez",
+	"I.M - Monsta X",
+	"Yoshi - Treasure"
+  ],
+  "media": [
+"https://static.wikia.nocookie.net/kpop/images/e/e2/VERIVERY_Yongseung_Liminality_-_EP.Dream_concept_photo_1.png/revision/latest/scale-to-width-down/1000?cb=20230502184200",
+"https://image.kpopmap.com/2019/01/%ED%94%84%EB%A1%9C%ED%95%84-%EC%97%B0%EC%A4%80.png",
+"https://64.media.tumblr.com/34f4ae1b4e578696cbddd03337d8f643/6a7c1f43ca5ae2c4-ec/s1280x1920/b7b5edd37d189ec5e5e86774b03338edba8e49f9.jpg",
+["https://pbs.twimg.com/media/F5zpLGoa0AAoXca?format=jpg&name=4096x4096", "https://i.pinimg.com/736x/f8/50/ff/f850ff17b888bab13dfeeb6bf22168a0.jpg"],
+"",
+"",
+["https://youtu.be/XdaWkfVOQD0","https://youtu.be/Kc60Wrx8pr4?t=180"],
+"https://www.youtube.com/watch?v=lMh6X1sLCW8",
+"https://youtu.be/Nl6unWjkv9k?si=pKvHAFHv0uUw4qnM&t=155",
+"https://www.reddit.com/r/kpop/comments/11z4dxj/im_monsta_x_1st_look_magazine_vol_254_pictorial/"
+ 
+ ]
+}

@@ -1,12 +1,11 @@
 {
-  "_displayMode_guide": {
-    "video": "Standard YouTube battle with default scaling.",
-    "text": "Text-only mode. Hides visual containers and centers large names.",
-    "big-names-video": "Prioritizes names at the top with smaller video players below.",
-    "linked-images": "Displays static images using URLs provided in the 'images' array.",
-    "panorama": "Optimized for wide images; supports arrays of images per name with navigation arrows."
+  "_guide": {
+    "DYNAMIC_MEDIA": "The system analyzes each index in 'media'.",
+    "Video": "Put the YouTube ID string (e.g., 'u9nP3qXQA4o').",
+    "Single Image": "Put the URL string starting with 'http'.",
+    "Multi-Image": "Put an array of URL strings (e.g., ['http://pic1.jpg', 'http://pic2.jpg']).",
+    "Text Only": "Put an empty string ''."
   },
-  "displayMode": "video",
   "names": [
 	"HEYA - IVE",
 	"Whiplash - aespa ",
@@ -26,7 +25,7 @@
 	"Not okay - Ateez",
 	"WOKE UP - XG"
   ],
-  "ids": [
+  "media": [
 "07EzMbVH3QE",
 "jWQx2f-CErU",
 "J--BukW5BfQ",
@@ -44,7 +43,5 @@
 "KAymeaEyPr8",
 "oc_2sjQXa0Q",
 "5sT20edl02I"
-  ],
-  "images": [
   ]
 }

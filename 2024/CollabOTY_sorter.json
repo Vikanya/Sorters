@@ -1,12 +1,11 @@
 {
-  "_displayMode_guide": {
-    "video": "Standard YouTube battle with default scaling.",
-    "text": "Text-only mode. Hides visual containers and centers large names.",
-    "big-names-video": "Prioritizes names at the top with smaller video players below.",
-    "linked-images": "Displays static images using URLs provided in the 'images' array.",
-    "panorama": "Optimized for wide images; supports arrays of images per name with navigation arrows."
+  "_guide": {
+    "DYNAMIC_MEDIA": "The system analyzes each index in 'media'.",
+    "Video": "Put the YouTube ID string (e.g., 'u9nP3qXQA4o').",
+    "Single Image": "Put the URL string starting with 'http'.",
+    "Multi-Image": "Put an array of URL strings (e.g., ['http://pic1.jpg', 'http://pic2.jpg']).",
+    "Text Only": "Put an empty string ''."
   },
-  "displayMode": "video",
   "names": [
 	"Rewrite the Stars - Suhyun et D.O.",
 	"harmless - Bobby, Chanmina",
@@ -22,7 +21,7 @@
 	"APT. - Rosé x Bruno Mars",
 	"Lisa ft Rosalia "
   ],
-  "ids": [
+  "media": [
 	"_TJlXlwJ6js",
 	"huQcclSHk1o",
 	"zBXhUQcmhT0",
@@ -36,7 +35,5 @@
 	"zZwFi86zIZM",
 	"ekr2nIex040",
 	"UxXY_hR_wzo"
-  ],
-  "images": [
   ]
 }

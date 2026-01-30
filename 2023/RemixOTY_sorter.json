@@ -1,0 +1,31 @@
+{
+  "_guide": {
+    "DYNAMIC_MEDIA": "The system analyzes each index in 'media'.",
+    "Video": "Put the YouTube ID string (e.g., 'u9nP3qXQA4o').",
+    "Single Image": "Put the URL string starting with 'http'.",
+    "Multi-Image": "Put an array of URL strings (e.g., ['http://pic1.jpg', 'http://pic2.jpg']).",
+    "Text Only": "Put an empty string ''."
+  },
+  "names": [
+"Hold on Tight - aespa (Tetris)(ça compte?)",
+"Los Angeles - Seulgi (Moksi remix)",
+"Phantom - WayV (Pierre Blanche remix)",
+"Forever 1 - SNSD (Matisse & Sadko remix)",
+"Gods by Maytree - New Jeans & Lol",
+"Can't Take My Eyes Off You - NCT Jaehyun ",
+"Villain - Minnie",
+"Sherlock - Shinee (Band Ver.)",
+"WIN - Ateez (June One Remix)"
+  ],
+  "media": [
+"ZIG7OeF1nk8",
+"Xg6TuF1QV1I",
+"JjB0tDhLiBw",
+"sUyxw7X2GVk",
+"rNcHUVQvY-0",
+"4lQZ3zd1IKg",
+"3MhPVbOij1U",
+"Hk1dquql4zg",
+"JsRscKtDyOo"
+  ]
+}

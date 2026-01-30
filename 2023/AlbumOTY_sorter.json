@@ -1,0 +1,29 @@
+{
+  "_guide": {
+    "DYNAMIC_MEDIA": "The system analyzes each index in 'media'.",
+    "Video": "Put the YouTube ID string (e.g., 'u9nP3qXQA4o').",
+    "Single Image": "Put the URL string starting with 'http'.",
+    "Multi-Image": "Put an array of URL strings (e.g., ['http://pic1.jpg', 'http://pic2.jpg']).",
+    "Text Only": "Put an empty string ''."
+  },
+  "names": [
+"HOUSE OF TRICKY : Doorbell Ringing - xikers",
+"Hard - Shinee",
+"Unlock My World - fromis_9",
+"Loossemble - Loossemble",
+"Chill Kill - Red Velvet",
+"I've IVE - IVE",
+"New DNE - XG",
+"Drama - aespa",
+"The Billage of Perception: Chapter Three - Billlie",
+"Over the Moon - Lee Chaeyeon",
+"Assemble - TripleS",
+"My World - aespa",
+"Get Up - Newjeans",
+"Lovelution - TripleS",
+"The ReVe Festival 2022 - Red Velvet"
+  ],
+  "media": [
+  
+  ]
+}

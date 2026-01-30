@@ -1,0 +1,32 @@
+{
+  "_guide": {
+    "DYNAMIC_MEDIA": "The system analyzes each index in 'media'.",
+    "Video": "Put the YouTube ID string (e.g., 'u9nP3qXQA4o').",
+    "Single Image": "Put the URL string starting with 'http'.",
+    "Multi-Image": "Put an array of URL strings (e.g., ['http://pic1.jpg', 'http://pic2.jpg']).",
+    "Text Only": "Put an empty string ''."
+  },
+  "names": [
+"tout boys planet",
+"YG qui annonce le comeback de TREASURE en s'excusant facecam :skull:",
+"le boycott de NJ",
+"LE SSERAFIM - Eve, Psyche & the Bluebeard's wife (feat. ???)",
+"Freres Jacques - Nmixx",
+"le screentime de monday sur queendom puzzle",
+"les teasers de XG",
+"les hétéros dans le chan #horny-on-main",
+"Korin qui thirst sur Wooyoung",
+"Vika qui thirst sur les décors de MV",
+"Wonyoung qui se crashe sur l'avion",
+"Les teasers post-mortem de LOONA ",
+"Lily and the girls",
+"Les doubles pédales de drum n bass",
+"https://pbs.twimg.com/media/FvIbYpBaEAEs8Bw.jpg",
+"Les prods de Fiesta qui \"Reduce Reuse Recycle\"",
+"I've IVE - IVE",
+"https://youtu.be/KEFNlx4ZIOU"
+  ],
+  "media": [
+  
+  ]
+}
