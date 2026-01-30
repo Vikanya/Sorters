@@ -1,0 +1,27 @@
+{
+  "_guide": {
+    "DYNAMIC_MEDIA": "The system analyzes each index in 'media'.",
+    "Video": "Put the YouTube ID string (e.g., 'u9nP3qXQA4o').",
+    "Single Image": "Put the URL string starting with 'http'.",
+    "Multi-Image": "Put an array of URL strings (e.g., ['http://pic1.jpg', 'http://pic2.jpg']).",
+    "Text Only": "Put an empty string ''."
+  },
+  "names": [
+"la tenue noire et rouge, dans Whiplash pendant Boys Planet II",
+"les tenues noires, dans We Go Up - Babymonster",
+"What you Want - Cortis",
+"Jinsoul en armure pour Icarus",
+"Yunjin pour ELLE Korea (May 2025)",
+"Jackson Wang pour ELLE China (April 2025)",
+"Know about me - Nmixx "
+  ],
+  "media": [
+"R8FpGi-KE1Q",
+"o9V8HrgJgIg&t=45",
+"6MYB61hUaFg",
+"https://x.com/kukudas_5b/status/1959282559634034992",
+"https://www.instagram.com/p/DJarR6DTKPV/?img_index=1&igsh=OTB6dThkeWF1ZDI1",
+"https://www.instagram.com/p/DHVbqbrSrnQ/?igsh=MXg3cTNjbnNkeHJobw%3D%3D",
+"aFrQIJ5cbRc&t=13"
+  ]
+}
