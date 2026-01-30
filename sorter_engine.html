@@ -124,27 +124,35 @@
             display: flex !important;
             flex-direction: column;
             align-items: center;
-            justify-content: flex-start; /* Start from top to allow scrolling */
+            justify-content: flex-start; /* Start from top to prevent squashing and allow scrolling */
             background: transparent;
             scrollbar-width: thin;
             scrollbar-color: var(--border) transparent;
         }
         
-        /* Social media iframes (IG, SC) should not be forced to 100% height if they are in a scrollable wrapper */
+        /* Social media iframes (IG, SC) behavior */
         .social-wrapper iframe {
             object-fit: contain !important;
             max-width: 100%;
+            width: 100%;
             height: auto;
-            min-height: 450px; /* Base height for IG/SC to look good */
+            border: none;
         }
         
-        /* SoundCloud specific height (usually shorter than IG) */
+        /* Instagram Specific: Needs a tall minimum height to avoid the white/grey squashed look */
+        .social-wrapper iframe[src*="instagram.com"] {
+            min-height: 600px;
+            max-width: 450px; /* Standard IG embed width */
+            margin: 10px auto;
+        }
+        
+        /* SoundCloud specific height */
         .social-wrapper iframe[src*="soundcloud.com"] {
             min-height: 166px;
             width: 100% !important;
         }
 
-        /* Twitter specific: prevent the widget from being forced to 100% card height */
+        /* Twitter specific height logic */
         .twitter-tweet {
             margin: 10px auto !important;
             height: auto !important;
@@ -411,7 +419,8 @@ function renderSubMedia(side, group, index) {
         content.innerHTML = `<div class="social-wrapper"><iframe scrolling="no" frameborder="no" allow="autoplay" src="https://w.soundcloud.com/player/?url=${encodeURIComponent(item)}&color=%23b197fc&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false&visual=true"></iframe></div>`;
     } else if (isIG) {
         const cleanUrl = item.split(/[?#]/)[0];
-        content.innerHTML = `<div class="social-wrapper"><iframe src="${cleanUrl.endsWith('/') ? cleanUrl : cleanUrl + '/'}embed/" frameborder="0" scrolling="no" allowtransparency="true"></iframe></div>`;
+        const embedUrl = cleanUrl.endsWith('/') ? cleanUrl + 'embed/' : cleanUrl + '/embed/';
+        content.innerHTML = `<div class="social-wrapper"><iframe src="${embedUrl}" frameborder="0" scrolling="no" allowtransparency="true" allow="encrypted-media"></iframe></div>`;
     } else if (isTwitter) {
         content.innerHTML = `<div class="social-wrapper"><div id="tweet-${side}-${index}" style="width:100%; max-width:550px; margin: auto;"></div></div>`;
         if (window.twttr && window.twttr.widgets) {
