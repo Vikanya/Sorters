@@ -95,7 +95,7 @@
             display: flex; align-items: center; justify-content: center;
             position: relative;
             height: 100%; 
-            background: transparent; /* Changed from #000 to avoid grey/black strips */
+            background: transparent;
         }
         
         .visual-container > div, 
@@ -107,16 +107,13 @@
             display: block;
         }
         
-        /* Ensure images fit without cropping while preserving aspect ratio */
         .visual-container img { object-fit: contain; }
-        /* Video iframes still fill the container width/height */
         .visual-container iframe { object-fit: cover; background: #000; }
         
         .mode-panorama .visual-container img { object-fit: contain; background: transparent; }
 
         .video-playing { border-color: var(--primary); }
 
-        /* Navigation Arrows: Simplified to remove circular grey background */
         .img-nav {
             position: absolute; top: 50%; transform: translateY(-50%);
             background: none; color: white; border: none;
@@ -134,10 +131,12 @@
         
         .img-counter {
             position: absolute; bottom: 10px; right: 10px;
-            background: rgba(0,0,0,0.4); color: white; padding: 4px 8px;
+            background: none; /* Removed grey background */
+            color: white; padding: 4px 8px;
             border-radius: 10px; font-size: 10px; font-weight: bold;
             pointer-events: none;
-            backdrop-filter: blur(2px);
+            text-shadow: 0 0 5px rgba(0,0,0,0.8); /* Added shadow for legibility */
+            backdrop-filter: none; /* Removed blur */
         }
 
         .middle-controls { display: flex; flex-direction: column; justify-content: center; gap: 8px; width: 125px; flex-shrink: 0; }
@@ -390,7 +389,6 @@ async function updateUI(isUndo = false) {
         document.querySelectorAll('.visual-container').forEach(w => w.classList.remove('video-playing'));
         
         if (displayMode.includes("video")) {
-            // FORCE STOP players to ensure clean refresh
             if (playerLeft && playerLeft.stopVideo) playerLeft.stopVideo();
             if (playerRight && playerRight.stopVideo) playerRight.stopVideo();
 
@@ -415,7 +413,7 @@ async function updateUI(isUndo = false) {
                 const count = isArr ? group.length : 1;
                 
                 document.getElementById('img' + side).src = url || '';
-                document.getElementById('counter' + side).innerText = `1/${count}`;
+                document.getElementById('counter' + side).innerText = `${1}/${count}`;
                 document.getElementById('counter' + side).classList.toggle('hidden', count <= 1);
                 document.getElementById('wrapper' + side).querySelectorAll('.img-nav').forEach(btn => {
                     btn.classList.toggle('hidden', count <= 1);
