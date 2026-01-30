@@ -97,9 +97,14 @@
             background: transparent;
         }
         
-        /* Force internal containers and media to fill available space */
-        .visual-container > div[id^="content"],
-        .visual-container iframe, 
+        /* Layout for primary content containers */
+        .visual-container > div[id^="content"] {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Videos and standard Images fill available space */
+        .visual-container iframe[id^="yt"], 
         .visual-container img { 
             width: 100% !important; 
             height: 100% !important; 
@@ -107,16 +112,10 @@
             display: block;
         }
         
-        /* Images fit without cropping */
         .visual-container img { object-fit: contain; }
+        .visual-container iframe[id^="yt"] { object-fit: cover; background: #000; }
         
-        /* YouTube specific: fill container with cover to hide bars */
-        .visual-container iframe[id^="yt"] { 
-            object-fit: cover; 
-            background: #000; 
-        }
-        
-        /* Social Media Wrapper for scrolling and proper sizing */
+        /* Social Media Wrapper: Allow content to define height and scroll instead of squashing */
         .social-wrapper {
             width: 100% !important;
             height: 100% !important;
@@ -125,19 +124,30 @@
             display: flex !important;
             flex-direction: column;
             align-items: center;
-            justify-content: center; /* Center vertically if space allows */
+            justify-content: flex-start; /* Start from top to allow scrolling */
             background: transparent;
+            scrollbar-width: thin;
+            scrollbar-color: var(--border) transparent;
         }
         
-        /* Ensure social media iframes don't use the 'cover' rule */
+        /* Social media iframes (IG, SC) should not be forced to 100% height if they are in a scrollable wrapper */
         .social-wrapper iframe {
             object-fit: contain !important;
-            background: transparent !important;
+            max-width: 100%;
+            height: auto;
+            min-height: 450px; /* Base height for IG/SC to look good */
+        }
+        
+        /* SoundCloud specific height (usually shorter than IG) */
+        .social-wrapper iframe[src*="soundcloud.com"] {
+            min-height: 166px;
+            width: 100% !important;
         }
 
-        /* Target the Twitter-generated widget specifically */
+        /* Twitter specific: prevent the widget from being forced to 100% card height */
         .twitter-tweet {
-            margin: auto !important;
+            margin: 10px auto !important;
+            height: auto !important;
         }
 
         .video-playing { border-color: var(--primary); }
