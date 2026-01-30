@@ -1,0 +1,31 @@
+{
+  "_guide": {
+    "DYNAMIC_MEDIA": "The system analyzes each index in 'media'.",
+    "Video": "Put the YouTube ID string (e.g., 'u9nP3qXQA4o').",
+    "Single Image": "Put the URL string starting with 'http'.",
+    "Multi-Image": "Put an array of URL strings (e.g., ['http://pic1.jpg', 'http://pic2.jpg']).",
+    "Text Only": "Put an empty string ''."
+  },
+  "names": [
+"Like Jennie - Jennie",
+"Is this Love - XG (outro)",
+"Paint Candy - Close your Eyes",
+"Jellyous - ILLIT",
+"Gala - XG",
+"I'mma Be - XLOV",
+"WE GO UP - BABYMONSTER",
+"Hands Up - Meovv",
+"SOB - Close Your Eyes"
+  ],
+  "media": [
+"JSFG-IE8n_c?t=60",
+"aHTI0SXGVS0?t=133",
+"GVHMrGSaqTc",
+"E5joqiTD0ws",
+"6kM5srjtXc0",
+"VCSSStbyo2w",
+"o9V8HrgJgIg",
+"rqcNJ2Lqd-8",
+"cRKiwE8Zpck"
+  ]
+}

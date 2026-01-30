@@ -1,0 +1,31 @@
+{
+  "_guide": {
+    "DYNAMIC_MEDIA": "The system analyzes each index in 'media'.",
+    "Video": "Put the YouTube ID string (e.g., 'u9nP3qXQA4o').",
+    "Single Image": "Put the URL string starting with 'http'.",
+    "Multi-Image": "Put an array of URL strings (e.g., ['http://pic1.jpg', 'http://pic2.jpg']).",
+    "Text Only": "Put an empty string ''."
+  },
+  "names": [
+"Nmixx - Tiny Desk",
+"LE SSERAFIM x BEATPELLA HOUSE - Easy, Crazy, Hot",
+"Gnarly - Katseye",
+"NMIXX - Papillon | Live From Vevo Studios",
+"Rescene - Love Attack (Acoustic) Live",
+"Billie - Sixth Sense (Brown Eyed Girls)",
+"Killing Voice - GFRIEND",
+"We go up - Babymonster",
+"Drip - Babymonster"
+  ],
+  "media": [
+"bm-p-3Eh3G4",
+"mjIoRDTtlwA",
+"kUzCvV-Q2Xo",
+"xLlEEO8m5sI",
+"n4V9YxSyxfs",
+"CQpgZzFss6Y",
+"uOyjj06GGuE",
+"a0bc6Ownyt0",
+"06mCrMgv0zY"
+  ]
+}

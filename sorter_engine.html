@@ -97,6 +97,7 @@
             background: transparent;
         }
         
+        /* Force internal containers and media to fill available space */
         .visual-container > div[id^="content"],
         .visual-container iframe, 
         .visual-container img { 
@@ -106,7 +107,10 @@
             display: block;
         }
         
+        /* Images fit without cropping */
         .visual-container img { object-fit: contain; }
+        
+        /* Videos and SoundCloud embeds fill container */
         .visual-container iframe { object-fit: cover; background: #000; }
 
         .video-playing { border-color: var(--primary); }
@@ -340,8 +344,9 @@ function renderSubMedia(side, group, index) {
     const hint = document.getElementById('hint' + side);
     const item = group[index];
 
-    const isImg = typeof item === 'string' && item.trim().startsWith('http');
-    const isVid = typeof item === 'string' && item.trim().length > 0 && !isImg;
+    const isSC = typeof item === 'string' && item.includes('soundcloud.com');
+    const isImg = typeof item === 'string' && item.trim().startsWith('http') && !isSC;
+    const isVid = typeof item === 'string' && item.trim().length > 0 && !isImg && !isSC;
 
     content.innerHTML = '';
     hint.classList.add('hidden');
@@ -355,6 +360,8 @@ function renderSubMedia(side, group, index) {
             playerVars: { 'autoplay': 0, 'controls': 1, 'start': (item.match(/[?&]t=([0-9]+)/) || [0,0])[1] },
             events: { 'onStateChange': (e) => handleStateChange(e, side) }
         });
+    } else if (isSC) {
+        content.innerHTML = `<iframe scrolling="no" frameborder="no" allow="autoplay" src="https://w.soundcloud.com/player/?url=${encodeURIComponent(item)}&color=%23b197fc&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false&visual=true"></iframe>`;
     } else if (isImg) {
         content.innerHTML = `<img src="${item}" alt="">`;
     }
@@ -383,12 +390,13 @@ function refreshCard(side, index) {
     card.className = 'choice-card'; wrapper.classList.add('hidden'); hint.classList.add('hidden'); content.innerHTML = ''; 
 
     const isArr = Array.isArray(entry) && entry.length > 0;
-    const isImg = typeof entry === 'string' && entry.trim().startsWith('http');
-    const isVid = typeof entry === 'string' && entry.trim().length > 0 && !isImg;
+    const isSC = typeof entry === 'string' && entry.includes('soundcloud.com');
+    const isImg = typeof entry === 'string' && entry.trim().startsWith('http') && !isSC;
+    const isVid = typeof entry === 'string' && entry.trim().length > 0 && !isImg && !isSC;
 
     if (side === 'Left') subIdxLeft = 0; else subIdxRight = 0;
 
-    if (isVid || isImg || isArr) {
+    if (isVid || isImg || isSC || isArr) {
         wrapper.classList.remove('hidden');
         const list = isArr ? entry : [entry];
         const isMulti = list.length > 1;

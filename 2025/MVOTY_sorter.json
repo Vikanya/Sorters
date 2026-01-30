@@ -1,0 +1,29 @@
+{
+  "_guide": {
+    "DYNAMIC_MEDIA": "The system analyzes each index in 'media'.",
+    "Video": "Put the YouTube ID string (e.g., 'u9nP3qXQA4o').",
+    "Single Image": "Put the URL string starting with 'http'.",
+    "Multi-Image": "Put an array of URL strings (e.g., ['http://pic1.jpg', 'http://pic2.jpg']).",
+    "Text Only": "Put an empty string ''."
+  },
+  "names": [
+"Famous - Allday Project",
+"Zen - Jennie",
+"Gabriela - Katseye",
+"Dirty Work - aespa",
+"Extra - Jeon Somi",
+"Icarus - ARTMS",
+"Jellyous - Illit",
+"Icarus (Club Version) - ARTMS"
+  ],
+  "media": [
+"VjvzYjU1mY0",
+"cXmYNmQ4BuM",
+"CjnB56tSCQI",
+"M2WTUoy4y6E",
+"zq5mr3ePY1I",
+"J-bEGflpV9k",
+"GkG60kISnfc",
+"D-w2HwG18vg",
+  ]
+}

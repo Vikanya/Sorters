@@ -1,0 +1,37 @@
+{
+  "_guide": {
+    "DYNAMIC_MEDIA": "The system analyzes each index in 'media'.",
+    "Video": "Put the YouTube ID string (e.g., 'u9nP3qXQA4o').",
+    "Single Image": "Put the URL string starting with 'http'.",
+    "Multi-Image": "Put an array of URL strings (e.g., ['http://pic1.jpg', 'http://pic2.jpg']).",
+    "Text Only": "Put an empty string ''."
+  },
+  "names": [
+"Her - Block B, cover par Nmixx ",
+"Whiplash - Yohan Kim",
+"Steady - NCT Wish (Snail's House Remix)",
+"Valenti + Hush + Guilty - Kepler",
+"NMIXX Lily - The Greatest (Billie Eilish)",
+"EXID - Get Up (Baby V.O.X.)",
+"Billie - Sixth Sense (Brown Eyed Girls)",
+"aespa - Rum Pum Pum Pum (f(x))",
+"Yujin x Karina - Killer (Valerie Broussard)",
+"Monday - Golden (Huntr/x)",
+"Pinball - Rescene (DJ.DAI Remix)",
+"NMIXX (Bae & Jiwoo) - And July (Heize)"
+  ],
+  "media": [
+"7n3Zy-rFlEg?t=2174",
+"5-ShxXN3KeU",
+"O-NhdWiJus8",
+"Fs89G7r4E-8",
+"enFbUOmwPrs",
+"vTIOpLve5bQ?t=37",
+"CQpgZzFss6Y",
+"O78NzcXf2sw",
+"MmONqKigHEs",
+"0djyiVohRM0",
+"https://soundcloud.com/daidayo222/rescene-pinball-djdai-dnb-edit",
+"zmCMT7i_PSM"
+  ]
+}
