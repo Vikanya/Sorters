@@ -251,7 +251,7 @@ async function loadSorterData() {
         } 
         catch (jsonErr) { throw new Error("INVALID JSON FORMAT: Check for syntax errors."); }
         
-        if (!data.names || data.names.length < 2) throw new Error("DATA ERROR: Missing 'names' array.");
+        if (!data.names || data.names.length < 2) throw new Error("DATA ERROR: Missing 'names'.");
 
         namMember = data.names;
         videoIds = data.ids || [];
@@ -268,7 +268,7 @@ async function loadSorterData() {
         else { initList(); updateUI(); }
     } catch (e) {
         battleLabel.style.color = "#ff8787";
-        battleLabel.innerText = e.message;
+        battleLabel.innerText = "LOAD ERROR: " + e.message;
     }
 }
 
