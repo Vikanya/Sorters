@@ -97,7 +97,6 @@
             background: transparent;
         }
         
-        /* Force internal containers and media to fill available space */
         .visual-container > div[id^="content"],
         .visual-container iframe, 
         .visual-container img { 
@@ -107,10 +106,7 @@
             display: block;
         }
         
-        /* Images fit without cropping */
         .visual-container img { object-fit: contain; }
-        
-        /* Videos fill container */
         .visual-container iframe { object-fit: cover; background: #000; }
 
         .video-playing { border-color: var(--primary); }
@@ -195,9 +191,9 @@
         <div id="cardLeft" class="choice-card" onclick="if(!finishFlag) sortList(-1)">
             <div id="leftField" class="song-name">---</div>
             <div id="wrapperLeft" class="visual-container hidden" onclick="event.stopPropagation();">
-                <button class="img-nav prev hidden" onclick="navigateImages('Left', -1); event.stopPropagation();">‹</button>
+                <button class="img-nav prev hidden" onclick="navigateMedia('Left', -1); event.stopPropagation();">‹</button>
                 <div id="contentLeft"></div>
-                <button class="img-nav next hidden" onclick="navigateImages('Left', 1); event.stopPropagation();">›</button>
+                <button class="img-nav next hidden" onclick="navigateMedia('Left', 1); event.stopPropagation();">›</button>
                 <div id="counterLeft" class="img-counter hidden">1/1</div>
             </div>
             <span id="hintLeft" class="key-hint" style="margin-top:5px; font-size:9px; opacity:0.3;">[<span class="left-key-label">A</span>] PLAY</span>
@@ -212,9 +208,9 @@
         <div id="cardRight" class="choice-card" onclick="if(!finishFlag) sortList(1)">
             <div id="rightField" class="song-name">---</div>
             <div id="wrapperRight" class="visual-container hidden" onclick="event.stopPropagation();">
-                <button class="img-nav prev hidden" onclick="navigateImages('Right', -1); event.stopPropagation();">‹</button>
+                <button class="img-nav prev hidden" onclick="navigateMedia('Right', -1); event.stopPropagation();">‹</button>
                 <div id="contentRight"></div>
-                <button class="img-nav next hidden" onclick="navigateImages('Right', 1); event.stopPropagation();">›</button>
+                <button class="img-nav next hidden" onclick="navigateMedia('Right', 1); event.stopPropagation();">›</button>
                 <div id="counterRight" class="img-counter hidden">1/1</div>
             </div>
             <span id="hintRight" class="key-hint" style="margin-top:5px; font-size:9px; opacity:0.3;">[<span class="right-key-label">Z</span>] PLAY</span>
@@ -230,7 +226,7 @@
 <script>
 var namMember = [], mediaItems = [];
 var playerLeft, playerRight, leftReady = false, rightReady = false;
-var imgIdxLeft = 0, imgIdxRight = 0;
+var subIdxLeft = 0, subIdxRight = 0;
 
 async function loadSorterData() {
     const urlParams = new URLSearchParams(window.location.search);
@@ -258,7 +254,7 @@ async function loadSorterData() {
         firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
     } catch (e) {
         battleLabel.style.color = "#ff8787";
-        battleLabel.innerText = "LOAD ERROR: " + e.message;
+        battleLabel.innerText = "LOAD ERROR: Check JSON.";
     }
 }
 
@@ -324,18 +320,43 @@ function processChoice(targetCmp, targetHead) {
     while (equal[rec[nrec-1]] != -1) { rec[nrec++] = lstMember[targetCmp][window[targetHead]++]; finishSize++; }
 }
 
-function navigateImages(side, dir) {
+function navigateMedia(side, dir) {
     const idx = (side === 'Left') ? lstMember[cmp1][head1] : lstMember[cmp2][head2];
     const group = mediaItems[idx];
     if (!Array.isArray(group)) return;
+
     if (side === 'Left') {
-        imgIdxLeft = (imgIdxLeft + dir + group.length) % group.length;
-        document.getElementById('imgLeft').src = group[imgIdxLeft];
-        document.getElementById('counterLeft').innerText = `${imgIdxLeft + 1}/${group.length}`;
+        subIdxLeft = (subIdxLeft + dir + group.length) % group.length;
+        renderSubMedia(side, group, subIdxLeft);
     } else {
-        imgIdxRight = (imgIdxRight + dir + group.length) % group.length;
-        document.getElementById('imgRight').src = group[imgIdxRight];
-        document.getElementById('counterRight').innerText = `${imgIdxRight + 1}/${group.length}`;
+        subIdxRight = (subIdxRight + dir + group.length) % group.length;
+        renderSubMedia(side, group, subIdxRight);
+    }
+}
+
+function renderSubMedia(side, group, index) {
+    const content = document.getElementById('content' + side);
+    const counter = document.getElementById('counter' + side);
+    const hint = document.getElementById('hint' + side);
+    const item = group[index];
+
+    const isImg = typeof item === 'string' && item.trim().startsWith('http');
+    const isVid = typeof item === 'string' && item.trim().length > 0 && !isImg;
+
+    content.innerHTML = '';
+    hint.classList.add('hidden');
+    counter.innerText = `${index + 1}/${group.length}`;
+
+    if (isVid) {
+        hint.classList.remove('hidden');
+        content.innerHTML = `<div id="ytSub${side}"></div>`;
+        new YT.Player(`ytSub${side}`, {
+            height: '100%', width: '100%', videoId: item.split(/[?&]/)[0],
+            playerVars: { 'autoplay': 0, 'controls': 1, 'start': (item.match(/[?&]t=([0-9]+)/) || [0,0])[1] },
+            events: { 'onStateChange': (e) => handleStateChange(e, side) }
+        });
+    } else if (isImg) {
+        content.innerHTML = `<img src="${item}" alt="">`;
     }
 }
 
@@ -363,27 +384,21 @@ function refreshCard(side, index) {
 
     const isArr = Array.isArray(entry) && entry.length > 0;
     const isImg = typeof entry === 'string' && entry.trim().startsWith('http');
-    const isVid = typeof entry === 'string' && entry.trim().length > 0 && !entry.trim().startsWith('http');
+    const isVid = typeof entry === 'string' && entry.trim().length > 0 && !isImg;
 
-    if (isVid) {
-        wrapper.classList.remove('hidden'); hint.classList.remove('hidden');
-        content.innerHTML = `<div id="ytIframe${side}"></div>`;
-        const rawId = entry.trim();
-        new YT.Player(`ytIframe${side}`, {
-            height: '100%', width: '100%', videoId: rawId.split(/[?&]/)[0],
-            playerVars: { 'autoplay': 0, 'controls': 1, 'start': (rawId.match(/[?&]t=([0-9]+)/) || [0,0])[1] },
-            events: { 'onStateChange': (e) => handleStateChange(e, side) }
-        });
-    } else if (isArr || isImg) {
+    if (side === 'Left') subIdxLeft = 0; else subIdxRight = 0;
+
+    if (isVid || isImg || isArr) {
         wrapper.classList.remove('hidden');
-        const images = isArr ? entry : [entry];
-        content.innerHTML = `<img id="img${side}" src="${images[0]}" alt="">`;
-        const isMulti = images.length > 1;
+        const list = isArr ? entry : [entry];
+        const isMulti = list.length > 1;
+        
         wrapper.querySelector('.prev').classList.toggle('hidden', !isMulti);
         wrapper.querySelector('.next').classList.toggle('hidden', !isMulti);
         const counter = document.getElementById('counter' + side);
-        counter.classList.toggle('hidden', !isMulti); counter.innerText = `1/${images.length}`;
-        if(side === 'Left') imgIdxLeft = 0; else imgIdxRight = 0;
+        counter.classList.toggle('hidden', !isMulti);
+
+        renderSubMedia(side, list, 0);
     } else { 
         card.classList.add('card-text-only'); 
     }
@@ -396,7 +411,7 @@ function changeLayout(val) {
     document.getElementById('hint-left').innerText = lK; document.getElementById('hint-right').innerText = rK;
 }
 
-function saveState() { historyStack.push(JSON.parse(JSON.stringify({lstMember, parent, equal, rec, cmp1, cmp2, head1, head2, nrec, numQuestion, finishSize, imgIdxLeft, imgIdxRight}))); document.getElementById("undoBtn").disabled = false; }
+function saveState() { historyStack.push(JSON.parse(JSON.stringify({lstMember, parent, equal, rec, cmp1, cmp2, head1, head2, nrec, numQuestion, finishSize, subIdxLeft, subIdxRight}))); document.getElementById("undoBtn").disabled = false; }
 function undo() {
     if (historyStack.length === 0) return;
     var s = historyStack.pop(); Object.assign(window, s); finishFlag = 0; numQuestion--;

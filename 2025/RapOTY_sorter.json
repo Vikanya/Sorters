@@ -1,0 +1,43 @@
+{
+  "_guide": {
+    "DYNAMIC_MEDIA": "The system analyzes each index in 'media'.",
+    "Video": "Put the YouTube ID string (e.g., 'u9nP3qXQA4o').",
+    "Single Image": "Put the URL string starting with 'http'.",
+    "Multi-Image": "Put an array of URL strings (e.g., ['http://pic1.jpg', 'http://pic2.jpg']).",
+    "Text Only": "Put an empty string ''."
+  },
+  "names": [
+"Jackson (les 2 raps) - Python / Got7",
+"Truman - Han",
+"We go up - Babymonster",
+"Bebe - STAYC",
+"Drip - Babymonster",
+"DUH - P1Harmony",
+"EX - P1Harmony",
+"Odetari - SMB",
+"GBAD - Jackson Wang",
+"Santa Claus - Young Posse",
+"Who's next - YOUNITE",
+"Name tag - Park Woojin",
+"Icy BBY - Moonbyul",
+"Breathe - xikers",
+"Spaghetti - Le sserafim & J-hope"
+  ],
+  "media": [
+"4d5C_PQl8Tg?t=20",
+"diMyNjWyDW8?t=99",
+"wlHwjkYpSr0?t=78",
+["z-xfGoabprU?t=129","z-xfGoabprU?t=159"],
+"Zp-Jhuhq0bQ?t=73",
+["7ZTBT86wRW4?t=66","7ZTBT86wRW4?t=126"],
+"ulVWhRN4Xvw?t=65",
+"b5P3O6uXCc0?t=48",
+"zeoRk6dDSFQ?t=142",
+"nMujoQ6AouA?t=25",
+"QpFQl5CqNfw?t=6",
+"IcgMqWdDs8A?t=45",
+"yKC7JkWl6ig?t=73",
+"aUMr0Oi1I-E?t=126",
+"TvVtYaqCni8?t=88"
+  ]
+}
