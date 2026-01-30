@@ -118,6 +118,7 @@
             font-size: 40px; transition: 0.2s; z-index: 5;
             opacity: 0;
             text-shadow: 0 0 10px rgba(0,0,0,0.8), 0 0 20px rgba(0,0,0,0.5);
+            -webkit-tap-highlight-color: transparent;
         }
         .visual-container:hover .img-nav { opacity: 1; }
         .img-nav:hover { color: var(--primary); scale: 1.1; }
@@ -221,7 +222,7 @@
     <div id="resultField"></div>
 
 <script>
-var namMember = [], videoIds = [], linkedImages = [];
+var namMember = [], mediaItems = [];
 var playerLeft, playerRight, leftReady = false, rightReady = false;
 var imgIdxLeft = 0, imgIdxRight = 0;
 
@@ -241,17 +242,19 @@ async function loadSorterData() {
         if (!response.ok) throw new Error(`FILE NOT FOUND: ${response.status}`);
         
         const raw = await response.text();
-        const data = JSON.parse(raw.replace(/\u00a0/g, ' ')); 
+        const sanitized = raw.replace(/\u00a0/g, ' '); 
+        const data = JSON.parse(sanitized); 
         
-        namMember = data.names || [];
-        videoIds = data.ids || [];
-        linkedImages = data.images || [];
+        if (!data.names || data.names.length < 2) throw new Error("DATA ERROR: Missing 'names'.");
+
+        namMember = data.names;
+        // Accept either 'media' or 'ids' for backward compatibility
+        mediaItems = data.media || data.ids || [];
 
         const fileName = dataPath.split('/').pop().replace('.json', '').replace(/[-_]/g, ' ');
         document.title = fileName.toUpperCase();
         document.getElementById('page-title').innerText = fileName;
 
-        // Start YouTube API loading
         var tag = document.createElement('script');
         tag.src = "https://www.youtube.com/iframe_api";
         var firstScriptTag = document.getElementsByTagName('script')[0];
@@ -263,7 +266,6 @@ async function loadSorterData() {
 }
 
 function onYouTubeIframeAPIReady() {
-    // FIX: Ensure elements exist before creating players
     document.getElementById('contentLeft').innerHTML = '<div id="ytIframeLeft"></div>';
     document.getElementById('contentRight').innerHTML = '<div id="ytIframeRight"></div>';
 
@@ -329,7 +331,7 @@ function processChoice(targetCmp, targetHead) {
 
 function navigateImages(side, dir) {
     const idx = (side === 'Left') ? lstMember[cmp1][head1] : lstMember[cmp2][head2];
-    const group = linkedImages[idx];
+    const group = mediaItems[idx];
     if (!Array.isArray(group)) return;
     if (side === 'Left') {
         imgIdxLeft = (imgIdxLeft + dir + group.length) % group.length;
@@ -361,39 +363,41 @@ function refreshCard(side, index) {
     const wrapper = document.getElementById('wrapper' + side);
     const content = document.getElementById('content' + side);
     const hint = document.getElementById('hint' + side);
-    const player = (side === 'Left') ? playerLeft : playerRight;
+    const mediaEntry = mediaItems[index];
 
     card.className = 'choice-card';
     wrapper.classList.add('hidden');
     hint.classList.add('hidden');
     content.innerHTML = ''; 
 
-    const rawId = videoIds[index] || "";
-    const rawImg = linkedImages[index] || "";
-    const isVideo = rawId.length > 0 && !rawId.startsWith('http');
-    const imgUrl = (rawId.startsWith('http')) ? rawId : (Array.isArray(rawImg) ? rawImg[0] : rawImg);
-    const isImage = imgUrl && imgUrl.startsWith('http');
+    // Determine type: Array (multi-image), String starts with http (image), String else (video), Empty (text)
+    const isMultiImage = Array.isArray(mediaEntry) && mediaEntry.length > 0;
+    const isSingleImage = typeof mediaEntry === 'string' && mediaEntry.trim().startsWith('http');
+    const isVideo = typeof mediaEntry === 'string' && mediaEntry.trim().length > 0 && !mediaEntry.trim().startsWith('http');
 
     if (isVideo) {
         wrapper.classList.remove('hidden'); hint.classList.remove('hidden');
         content.innerHTML = `<div id="ytIframe${side}"></div>`;
-        const nPlayer = new YT.Player(`ytIframe${side}`, {
+        const rawId = mediaEntry.trim();
+        new YT.Player(`ytIframe${side}`, {
             height: '100%', width: '100%', videoId: rawId.split(/[?&]/)[0],
             playerVars: { 'autoplay': 0, 'controls': 1, 'start': (rawId.match(/[?&]t=([0-9]+)/) || [0,0])[1] },
             events: { 'onStateChange': (e) => handleStateChange(e, side) }
         });
-        if (side === 'Left') playerLeft = nPlayer; else playerRight = nPlayer;
-    } else if (isImage) {
+    } else if (isMultiImage || isSingleImage) {
         wrapper.classList.remove('hidden');
-        const group = Array.isArray(rawImg) ? rawImg : [imgUrl];
-        content.innerHTML = `<img id="img${side}" src="${group[0]}" alt="">`;
-        const isMulti = group.length > 1;
+        const images = isMultiImage ? mediaEntry : [mediaEntry];
+        content.innerHTML = `<img id="img${side}" src="${images[0]}" alt="">`;
+        const isMulti = images.length > 1;
         wrapper.querySelector('.prev').classList.toggle('hidden', !isMulti);
         wrapper.querySelector('.next').classList.toggle('hidden', !isMulti);
-        document.getElementById('counter' + side).classList.toggle('hidden', !isMulti);
-        document.getElementById('counter' + side).innerText = `1/${group.length}`;
+        const counter = document.getElementById('counter' + side);
+        counter.classList.toggle('hidden', !isMulti);
+        counter.innerText = `1/${images.length}`;
         if(side === 'Left') imgIdxLeft = 0; else imgIdxRight = 0;
-    } else { card.classList.add('card-text-only'); }
+    } else { 
+        card.classList.add('card-text-only'); 
+    }
 }
 
 function changeLayout(val) {
@@ -410,6 +414,8 @@ function undo() {
     document.getElementById("resultField").innerHTML = ""; if (historyStack.length === 0) document.getElementById("undoBtn").disabled = true;
     updateUI(true);
 }
+
+function togglePlayer(player) { if (!player || !player.getPlayerState) return; if (player.getPlayerState() === 1) player.pauseVideo(); else player.playVideo(); }
 
 function showResult() {
     var ranking = 1, sameRank = 1, str = "<table><tr><th>Rank</th><th>Name</th></tr>";
