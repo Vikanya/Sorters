@@ -1,0 +1,33 @@
+{
+  "_guide": {
+    "DYNAMIC_MEDIA": "The system analyzes each index in 'media'.",
+    "Video": "Put the YouTube ID string (e.g., 'u9nP3qXQA4o').",
+    "Single Image": "Put the URL string starting with 'http'.",
+    "Multi-Image": "Put an array of URL strings (e.g., ['http://pic1.jpg', 'http://pic2.jpg']).",
+    "Text Only": "Put an empty string ''."
+  },
+  "names": [
+"LE SSERAFIM x BEATPELLA HOUSE - Easy, Crazy, Hot",
+"Fraktsiya - Mark ft Lee Youngji",
+"Obsession - Minnie (ft Ten)",
+"Music - Big Naughty (ft Lee Chanhyuk)",
+"BLINK - Sokodomo (ft Crush)",
+"Reno - Miyeon (feat Colde)",
+"Soap - Yves (feat PinkPantheress)",
+"APT. - ROSÉ (ft Bruno Mars)",
+"SPAGHETTI - LE SSERAFIM (feat j-hope)",
+"WoW - ARrC (ft MoonSua X Siyoon)"
+  ],
+  "media": [
+"mjIoRDTtlwA",
+"_GS3nQQex1g",
+"-pKYsndlSXE",
+"lKrspmmsCOo",
+"5mG5Vn9gub0",
+"nXWEZT0fVYY",
+"8_KZTNYGsCQ",
+["ekr2nIex040", "XIKz-AyYPCw", "IW8qaemx74g"],
+"TvVtYaqCni8",
+"Or8SJSPDSDU"
+  ]
+}
