@@ -86,8 +86,9 @@
             -webkit-box-orient: vertical;
         }
         
-        .mode-text .song-name { font-size: 2.5vw; flex: 1; -webkit-line-clamp: unset; }
-        .mode-big-names-video .song-name { font-size: 2.5vw; margin-bottom: 8px; }
+        /* Local Card State Styles */
+        .card-text-only .song-name { font-size: 2.5vw; flex: 1; -webkit-line-clamp: unset; }
+        .card-visual .song-name { flex-shrink: 0; }
 
         .visual-container { 
             flex: 1; width: 100%; border-radius: 12px; 
@@ -98,7 +99,6 @@
             background: transparent;
         }
         
-        .visual-container > div, 
         .visual-container iframe, 
         .visual-container img { 
             width: 100% !important; 
@@ -109,8 +109,6 @@
         
         .visual-container img { object-fit: contain; }
         .visual-container iframe { object-fit: cover; background: #000; }
-        
-        .mode-panorama .visual-container img { object-fit: contain; background: transparent; }
 
         .video-playing { border-color: var(--primary); }
 
@@ -131,12 +129,11 @@
         
         .img-counter {
             position: absolute; bottom: 10px; right: 10px;
-            background: none; /* Removed grey background */
+            background: none;
             color: white; padding: 4px 8px;
             border-radius: 10px; font-size: 10px; font-weight: bold;
             pointer-events: none;
-            text-shadow: 0 0 5px rgba(0,0,0,0.8); /* Added shadow for legibility */
-            backdrop-filter: none; /* Removed blur */
+            text-shadow: 0 0 5px rgba(0,0,0,0.8);
         }
 
         .middle-controls { display: flex; flex-direction: column; justify-content: center; gap: 8px; width: 125px; flex-shrink: 0; }
@@ -191,31 +188,38 @@
     </header>
 
     <div class="battle-area" id="battleArena">
+        <!-- LEFT CARD -->
         <div id="cardLeft" class="choice-card" onclick="if(!finishFlag) sortList(-1)">
             <div id="leftField" class="song-name">---</div>
+            
             <div id="wrapperLeft" class="visual-container hidden" onclick="event.stopPropagation();">
                 <button class="img-nav prev hidden" onclick="navigateImages('Left', -1); event.stopPropagation();">‹</button>
                 <div id="contentLeft"></div>
                 <button class="img-nav next hidden" onclick="navigateImages('Left', 1); event.stopPropagation();">›</button>
                 <div id="counterLeft" class="img-counter hidden">1/1</div>
             </div>
+            
             <span id="hintLeft" class="key-hint" style="margin-top:5px; font-size:9px; opacity:0.3;">[<span class="left-key-label">A</span>] PLAY</span>
         </div>
 
+        <!-- CONTROLS -->
         <div class="middle-controls">
             <div class="btn" onclick="if(!finishFlag) sortList(0)">LIKE BOTH</div>
             <div class="btn" onclick="if(!finishFlag) sortList(0)">NO OPINION</div>
             <button id="undoBtn" class="btn btn-undo" onclick="undo()" disabled>UNDO</button>
         </div>
 
+        <!-- RIGHT CARD -->
         <div id="cardRight" class="choice-card" onclick="if(!finishFlag) sortList(1)">
             <div id="rightField" class="song-name">---</div>
+            
             <div id="wrapperRight" class="visual-container hidden" onclick="event.stopPropagation();">
                 <button class="img-nav prev hidden" onclick="navigateImages('Right', -1); event.stopPropagation();">‹</button>
                 <div id="contentRight"></div>
                 <button class="img-nav next hidden" onclick="navigateImages('Right', 1); event.stopPropagation();">›</button>
                 <div id="counterRight" class="img-counter hidden">1/1</div>
             </div>
+            
             <span id="hintRight" class="key-hint" style="margin-top:5px; font-size:9px; opacity:0.3;">[<span class="right-key-label">Z</span>] PLAY</span>
         </div>
     </div>
@@ -246,14 +250,9 @@ async function loadSorterData() {
         const response = await fetch(dataPath);
         if (!response.ok) throw new Error(`FILE NOT FOUND: ${response.status}`);
         
-        let data;
-        try { 
-            const raw = await response.text();
-            // Sanitize string for common copy-paste illegal characters like non-breaking spaces
-            const sanitized = raw.replace(/\u00a0/g, ' ');
-            data = JSON.parse(sanitized); 
-        } 
-        catch (jsonErr) { throw new Error("INVALID JSON FORMAT: Check for syntax errors."); }
+        const raw = await response.text();
+        const sanitized = raw.replace(/\u00a0/g, ' '); 
+        const data = JSON.parse(sanitized); 
         
         if (!data.names || data.names.length < 2) throw new Error("DATA ERROR: Missing 'names'.");
 
@@ -262,36 +261,15 @@ async function loadSorterData() {
         linkedImages = data.images || [];
         displayMode = data.displayMode || "video";
 
-        setupLayoutMode();
-
         const fileName = dataPath.split('/').pop().replace('.json', '').replace(/[-_]/g, ' ');
         document.title = fileName.toUpperCase();
         document.getElementById('page-title').innerText = fileName;
 
-        if (displayMode.includes("video")) initYouTubePlayers(); 
-        else { initList(); updateUI(); }
+        // Force load YouTube API even if some cards don't have video (to support mix)
+        initYouTubePlayers(); 
     } catch (e) {
         battleLabel.style.color = "#ff8787";
         battleLabel.innerText = "LOAD ERROR: " + e.message;
-    }
-}
-
-function setupLayoutMode() {
-    const arena = document.getElementById('battleArena');
-    arena.className = 'battle-area mode-' + displayMode;
-    const isVideo = displayMode.includes("video");
-    const isImage = (displayMode === "linked-images" || displayMode === "panorama");
-
-    document.querySelectorAll('.visual-container').forEach(el => el.classList.toggle('hidden', !isVideo && !isImage));
-    document.querySelectorAll('.key-hint').forEach(el => el.classList.toggle('hidden', !isVideo));
-    document.getElementById('video-keys-hint').classList.toggle('hidden', !isVideo);
-
-    if (isVideo) {
-        document.getElementById('contentLeft').innerHTML = '<div id="ytPlayerLeft"></div>';
-        document.getElementById('contentRight').innerHTML = '<div id="ytPlayerRight"></div>';
-    } else if (isImage) {
-        document.getElementById('contentLeft').innerHTML = '<img id="imgLeft" src="" alt="">';
-        document.getElementById('contentRight').innerHTML = '<img id="imgRight" src="" alt="">';
     }
 }
 
@@ -303,12 +281,26 @@ function initYouTubePlayers() {
 }
 
 function onYouTubeIframeAPIReady() {
-    playerLeft = new YT.Player('ytPlayerLeft', { height: '100%', width: '100%', videoId: '', playerVars: { 'autoplay': 0, 'controls': 1, 'rel': 0, 'iv_load_policy': 3 },
+    playerLeft = new YT.Player('ytIframeLeft', { 
+        height: '100%', width: '100%', videoId: '', 
+        playerVars: { 'autoplay': 0, 'controls': 1, 'rel': 0, 'iv_load_policy': 3 },
         events: { 'onReady': () => { leftReady = true; checkPlayersReady(); }, 'onStateChange': (e) => handleStateChange(e, 'Left') }
     });
-    playerRight = new YT.Player('ytPlayerRight', { height: '100%', width: '100%', videoId: '', playerVars: { 'autoplay': 0, 'controls': 1, 'rel': 0, 'iv_load_policy': 3 },
+    playerRight = new YT.Player('ytIframeRight', { 
+        height: '100%', width: '100%', videoId: '', 
+        playerVars: { 'autoplay': 0, 'controls': 1, 'rel': 0, 'iv_load_policy': 3 },
         events: { 'onReady': () => { rightReady = true; checkPlayersReady(); }, 'onStateChange': (e) => handleStateChange(e, 'Right') }
     });
+
+    // Create the iframe placeholders
+    document.getElementById('contentLeft').innerHTML = '<div id="ytIframeLeft"></div>';
+    document.getElementById('contentRight').innerHTML = '<div id="ytIframeRight"></div>';
+}
+
+// Minimalistic HTML injection to ensure clean reset
+function resetContentPlaceholder(side) {
+    const cont = document.getElementById('content' + side);
+    cont.innerHTML = ''; 
 }
 
 function checkPlayersReady() { if (leftReady && rightReady) { initList(); updateUI(); } }
@@ -379,50 +371,82 @@ async function updateUI(isUndo = false) {
     var percent = Math.floor(finishSize * 100 / totalSize);
     document.getElementById("progressBar").style.width = percent + "%";
     document.getElementById("battleNumber").innerHTML = finishFlag ? "FINISHED!" : `QUESTION ${numQuestion} (${percent}%)`;
+    
     if (!finishFlag) {
         const LIdx = lstMember[cmp1][head1], RIdx = lstMember[cmp2][head2];
         document.getElementById("leftField").innerHTML = namMember[LIdx];
         document.getElementById("rightField").innerHTML = namMember[RIdx];
         
-        // Reset visual state before loading next round
-        document.querySelectorAll('.choice-card').forEach(c => c.classList.remove('focus', 'dim'));
-        document.querySelectorAll('.visual-container').forEach(w => w.classList.remove('video-playing'));
+        // Dynamic detection and refresh for each card
+        refreshCard('Left', LIdx);
+        refreshCard('Right', RIdx);
         
-        if (displayMode.includes("video")) {
-            if (playerLeft && playerLeft.stopVideo) playerLeft.stopVideo();
-            if (playerRight && playerRight.stopVideo) playerRight.stopVideo();
-
-            const cue = (player, rawId) => {
-                if (!rawId || rawId.trim() === "" || !player.cueVideoById) return;
-                const match = rawId.match(/[?&]t=([0-9]+)/);
-                const start = match ? parseInt(match[1]) : 0;
-                const cleanId = rawId.split(/[?&]/)[0];
-                player.cueVideoById({ videoId: cleanId, startSeconds: start });
-            };
-            cue(playerLeft, videoIds[LIdx]);
-            cue(playerRight, videoIds[RIdx]);
-        }
-        
-        imgIdxLeft = 0; imgIdxRight = 0;
-
-        if (displayMode === "linked-images" || displayMode === "panorama") {
-            const setupImgs = (side, idx) => {
-                const group = linkedImages[idx];
-                const isArr = Array.isArray(group);
-                const url = isArr ? group[0] : group;
-                const count = isArr ? group.length : 1;
-                
-                document.getElementById('img' + side).src = url || '';
-                document.getElementById('counter' + side).innerText = `${1}/${count}`;
-                document.getElementById('counter' + side).classList.toggle('hidden', count <= 1);
-                document.getElementById('wrapper' + side).querySelectorAll('.img-nav').forEach(btn => {
-                    btn.classList.toggle('hidden', count <= 1);
-                });
-            };
-            setupImgs('Left', LIdx);
-            setupImgs('Right', RIdx);
-        }
         if (!isUndo) numQuestion++;
+    }
+}
+
+function refreshCard(side, index) {
+    const card = document.getElementById('card' + side);
+    const wrapper = document.getElementById('wrapper' + side);
+    const content = document.getElementById('content' + side);
+    const hint = document.getElementById('hint' + side);
+    const player = (side === 'Left') ? playerLeft : playerRight;
+
+    // Reset visibility and state
+    card.className = 'choice-card';
+    wrapper.classList.add('hidden');
+    hint.classList.add('hidden');
+    content.innerHTML = ''; 
+
+    const rawId = videoIds[index] || "";
+    const rawImg = linkedImages[index] || "";
+
+    // 1. Check for Video
+    const isVideo = rawId.length > 0 && !rawId.startsWith('http');
+    // 2. Check for Image (either in ids or images array)
+    const imgUrl = (rawId.startsWith('http')) ? rawId : (Array.isArray(rawImg) ? rawImg[0] : rawImg);
+    const isImage = imgUrl && imgUrl.startsWith('http');
+
+    if (isVideo) {
+        card.classList.add('card-visual');
+        wrapper.classList.remove('hidden');
+        hint.classList.remove('hidden');
+        content.innerHTML = `<div id="ytIframe${side}"></div>`;
+        
+        // Re-initialize player for this clean slot
+        const newPlayer = new YT.Player(`ytIframe${side}`, {
+            height: '100%', width: '100%',
+            videoId: rawId.split(/[?&]/)[0],
+            playerVars: { 
+                'autoplay': 0, 'controls': 1, 
+                'start': (rawId.match(/[?&]t=([0-9]+)/) || [0,0])[1] 
+            },
+            events: { 'onStateChange': (e) => handleStateChange(e, side) }
+        });
+        if (side === 'Left') playerLeft = newPlayer; else playerRight = newPlayer;
+
+    } else if (isImage) {
+        card.classList.add('card-visual');
+        wrapper.classList.remove('hidden');
+        
+        const group = Array.isArray(rawImg) ? rawImg : [imgUrl];
+        content.innerHTML = `<img id="img${side}" src="${group[0]}" alt="">`;
+        
+        // Setup Panorama nav if multiple
+        const navPrev = wrapper.querySelector('.prev');
+        const navNext = wrapper.querySelector('.next');
+        const counter = document.getElementById('counter' + side);
+        
+        const isMulti = group.length > 1;
+        if(navPrev) navPrev.classList.toggle('hidden', !isMulti);
+        if(navNext) navNext.classList.toggle('hidden', !isMulti);
+        counter.classList.toggle('hidden', !isMulti);
+        counter.innerText = `1/${group.length}`;
+        if(side === 'Left') imgIdxLeft = 0; else imgIdxRight = 0;
+
+    } else {
+        // Text Only
+        card.classList.add('card-text-only');
     }
 }
 
@@ -441,8 +465,6 @@ function undo() {
     updateUI(true);
 }
 
-function togglePlayer(player) { if (!player || !player.getPlayerState) return; if (player.getPlayerState() === 1) player.pauseVideo(); else player.playVideo(); }
-
 function showResult() {
     var ranking = 1, sameRank = 1, str = "<table><tr><th>Rank</th><th>Name</th></tr>";
     for (var i=0; i<namMember.length; i++) {
@@ -459,7 +481,6 @@ function showResult() {
 window.addEventListener('keydown', (e) => {
     if (e.target.tagName == 'INPUT' || e.target.tagName == 'TEXTAREA') return;
     if (e.ctrlKey && e.key === 'z') { undo(); return; }
-    if (displayMode.includes("video")) { if (e.code === 'KeyQ') togglePlayer(playerLeft); if (e.code === 'KeyW') togglePlayer(playerRight); }
     if (finishFlag) return;
     if (e.key === 'ArrowLeft') sortList(-1); if (e.key === 'ArrowRight') sortList(1); if (e.key === 'ArrowDown') sortList(0);
 });
