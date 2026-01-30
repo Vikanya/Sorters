@@ -371,18 +371,38 @@ function sortList(flag){
     if (flag < 0) processChoice(cmp1, 'head1');
     else if (flag > 0) processChoice(cmp2, 'head2');
     else { processChoice(cmp1, 'head1'); equal[rec[nrec-1]] = lstMember[cmp2][head2]; processChoice(cmp2, 'head2'); }
-    if (head1 < lstMember[cmp1].length && head2 == lstMember[cmp2].length) { while (head1 < lstMember[cmp1].length) processChoice(cmp1, 'head1'); } 
-    else if (head1 == lstMember[cmp1].length && head2 < lstMember[cmp2].length) { while (head2 < lstMember[cmp2].length) processChoice(cmp2, 'head2'); }
-    if (head1 == lstMember[cmp1].length && head2 == lstReady == lstMember[cmp1].length && head2 == lstMember[cmp2].length) {
-        for (var i=0; i<lstMember[cmp1].length+lstMember[cmp2].length; i++) lstMember[parent[cmp1]][i] = rec[i];
-        lstMember.pop(); lstMember.pop(); cmp1 -= 2; cmp2 -= 2; head1 = head2 = nrec = 0;
+    
+    if (head1 < lstMember[cmp1].length && head2 == lstMember[cmp2].length) { 
+        while (head1 < lstMember[cmp1].length) processChoice(cmp1, 'head1'); 
+    } else if (head1 == lstMember[cmp1].length && head2 < lstMember[cmp2].length) { 
+        while (head2 < lstMember[cmp2].length) processChoice(cmp2, 'head2'); 
     }
-    if (cmp1 < 0) { finishFlag = 1; updateUI(); showResult(); } else { updateUI(); }
+    
+    // FIX: Removed typo "lstReady"
+    if (head1 == lstMember[cmp1].length && head2 == lstMember[cmp2].length) {
+        for (var i=0; i<lstMember[cmp1].length+lstMember[cmp2].length; i++) {
+            lstMember[parent[cmp1]][i] = rec[i];
+        }
+        lstMember.pop(); 
+        lstMember.pop(); 
+        cmp1 -= 2; 
+        cmp2 -= 2; 
+        head1 = head2 = nrec = 0;
+    }
+    
+    if (cmp1 < 0) { finishFlag = 1; updateUI(); showResult(); } 
+    else { updateUI(); }
 }
 
 function processChoice(targetCmp, targetHead) {
-    rec[nrec++] = lstMember[targetCmp][window[targetHead]++]; finishSize++;
-    while (equal[rec[nrec-1]] != -1) { rec[nrec++] = lstMember[targetCmp][window[targetHead]++]; finishSize++; }
+    if (window[targetHead] >= lstMember[targetCmp].length) return;
+    rec[nrec++] = lstMember[targetCmp][window[targetHead]++]; 
+    finishSize++;
+    while (nrec > 0 && equal[rec[nrec-1]] != -1) { 
+        if (window[targetHead] >= lstMember[targetCmp].length) break;
+        rec[nrec++] = lstMember[targetCmp][window[targetHead]++]; 
+        finishSize++; 
+    }
 }
 
 function navigateMedia(side, dir) {
@@ -431,7 +451,6 @@ function renderSubMedia(side, group, index) {
         const embedUrl = cleanUrl.endsWith('/') ? cleanUrl + 'embed/' : cleanUrl + '/embed/';
         content.innerHTML = `<div class="social-wrapper"><iframe src="${embedUrl}" frameborder="0" scrolling="no" allowtransparency="true" allow="encrypted-media"></iframe></div>`;
     } else if (isReddit) {
-        // Fix for Reddit hostname logic to prevent double-replacement
         let cleanUrl = item.split(/[?#]/)[0];
         let embedUrl = cleanUrl.replace(/^(?:https?:\/\/)?(?:www\.)?reddit\.com/, "https://embed.reddit.com");
         const separator = embedUrl.includes('?') ? '&' : '?';
