@@ -97,13 +97,11 @@
             background: transparent;
         }
         
-        /* Layout for primary content containers */
         .visual-container > div[id^="content"] {
             width: 100%;
             height: 100%;
         }
 
-        /* Videos and standard Images fill available space */
         .visual-container iframe[id^="yt"], 
         .visual-container img { 
             width: 100% !important; 
@@ -113,14 +111,8 @@
         }
         
         .visual-container img { object-fit: contain; }
+        .visual-container iframe[id^="yt"] { object-fit: cover; background: #000; }
         
-        /* YouTube specific: fill container with cover to hide bars */
-        .visual-container iframe[id^="yt"] { 
-            object-fit: cover; 
-            background: #000; 
-        }
-        
-        /* Social Media Wrapper: Allow content to define height and scroll instead of squashing */
         .social-wrapper {
             width: 100% !important;
             height: 100% !important;
@@ -129,42 +121,37 @@
             display: flex !important;
             flex-direction: column;
             align-items: center;
-            justify-content: flex-start; /* Ensure top alignment for scrollability */
+            justify-content: flex-start;
             background: transparent;
             scrollbar-width: thin;
             scrollbar-color: var(--border) transparent;
         }
         
-        /* Social media iframes (IG, SC, Reddit) behavior */
         .social-wrapper iframe {
             object-fit: contain !important;
             max-width: 100%;
             width: 100%;
-            height: auto; /* Dynamic height for content */
+            height: auto;
             border: none;
             margin: 10px auto;
         }
         
-        /* Instagram Specific: Large pixel-based height ensures bottom isn't cut off */
         .social-wrapper iframe[src*="instagram.com"] {
             min-height: 850px;
             max-width: 550px;
         }
         
-        /* Reddit Specific */
         .social-wrapper iframe[src*="reddit.com"] {
             min-height: 600px;
             max-width: 600px;
         }
         
-        /* SoundCloud specific height */
         .social-wrapper iframe[src*="soundcloud.com"] {
             height: 90% !important;
             min-height: 300px;
             width: 100% !important;
         }
 
-        /* Twitter specific height logic */
         .twitter-tweet {
             margin: 10px auto !important;
             height: auto !important;
@@ -183,7 +170,7 @@
             -webkit-tap-highlight-color: transparent;
         }
         .visual-container:hover .img-nav { opacity: 1; }
-        .img-nav:hover { color: var(--primary); scale: 1.1; }
+        .img-nav:hover { color: var(--primary); transform: scale(1.1); }
         .img-nav.prev { left: 0; }
         .img-nav.next { right: 0; }
         
@@ -228,18 +215,15 @@
         td { padding: 12px; border-bottom: 1px solid var(--border); color: #fff; text-align: center; }
         
         .hidden { display: none !important; }
+
+        .hint-sub { font-size: 8px; opacity: 0.3; display: block; margin-top: 2px; }
     </style>
 </head>
 <body>
 
     <div id="top-bar">
         <a href="index.html" class="nav-btn">⇠ Library</a>
-        <div>
-            <select id="layoutPicker" onchange="changeLayout(this.value)" style="background: #000; color: #fff; border: 1px solid var(--border); border-radius: 5px; font-size: 10px; padding: 4px;">
-                <option value="AZERTY">AZERTY</option>
-                <option value="QWERTY">QWERTY</option>
-            </select>
-        </div>
+        <div></div>
     </div>
 
     <header id="main-header">
@@ -257,7 +241,10 @@
                 <button class="img-nav next hidden" onclick="navigateMedia('Left', 1); event.stopPropagation();">›</button>
                 <div id="counterLeft" class="img-counter hidden">1/1</div>
             </div>
-            <span id="hintLeft" class="key-hint" style="margin-top:5px; font-size:9px; opacity:0.3;">[<span class="left-key-label">A</span>] PLAY</span>
+            <span id="hintLeft" class="key-hint" style="margin-top:5px; font-size:9px; opacity:0.3; text-align: center;">
+                [R] PLAY
+                <span class="hint-sub hint-nav-L hidden">[E] PREV | [T] NEXT</span>
+            </span>
         </div>
 
         <div class="middle-controls">
@@ -274,12 +261,16 @@
                 <button class="img-nav next hidden" onclick="navigateMedia('Right', 1); event.stopPropagation();">›</button>
                 <div id="counterRight" class="img-counter hidden">1/1</div>
             </div>
-            <span id="hintRight" class="key-hint" style="margin-top:5px; font-size:9px; opacity:0.3;">[<span class="right-key-label">Z</span>] PLAY</span>
+            <span id="hintRight" class="key-hint" style="margin-top:5px; font-size:9px; opacity:0.3; text-align: center;">
+                [O] PLAY
+                <span class="hint-sub hint-nav-R hidden">[I] PREV | [P] NEXT</span>
+            </span>
         </div>
     </div>
 
     <div class="instruction-footer" id="main-footer">
-        <span class="key-cap">← / →</span> WINNER | <span class="key-cap">↓</span> TIE | <span class="key-cap">Ctrl+Z</span> UNDO <span id="video-keys-hint">| <span class="key-cap" id="hint-left">A</span> / <span class="key-cap" id="hint-right">Z</span> VIDEO</span>
+        <span class="key-cap">← / →</span> WINNER | <span class="key-cap">↓</span> TIE | <span class="key-cap">Ctrl+Z</span> UNDO | 
+        <span class="key-cap">E R T</span> LEFT CARD | <span class="key-cap">I O P</span> RIGHT CARD
     </div>
 
     <div id="resultField"></div>
@@ -309,12 +300,10 @@ async function loadSorterData() {
         document.title = fileName.toUpperCase();
         document.getElementById('page-title').innerText = fileName;
 
-        // Load YouTube API
         var ytTag = document.createElement('script');
         ytTag.src = "https://www.youtube.com/iframe_api";
         document.getElementsByTagName('script')[0].parentNode.insertBefore(ytTag, document.getElementsByTagName('script')[0]);
 
-        // Load Twitter Widgets API
         var twTag = document.createElement('script');
         twTag.src = "https://platform.twitter.com/widgets.js";
         twTag.charset = "utf-8";
@@ -436,17 +425,17 @@ function renderSubMedia(side, group, index) {
     const isVid = typeof item === 'string' && item.trim().length > 0 && !isImg && !isSC && !isIG && !isTwitter && !isReddit;
 
     content.innerHTML = '';
-    hint.classList.add('hidden');
+    hint.querySelector('.hint-sub').classList.toggle('hidden', group.length <= 1);
     counter.innerText = `${index + 1}/${group.length}`;
 
     if (isVid) {
-        hint.classList.remove('hidden');
         content.innerHTML = `<div id="ytSub${side}"></div>`;
-        new YT.Player(`ytSub${side}`, {
+        const newP = new YT.Player(`ytSub${side}`, {
             height: '100%', width: '100%', videoId: item.split(/[?&]/)[0],
             playerVars: { 'autoplay': 0, 'controls': 1, 'start': (item.match(/[?&]t=([0-9]+)/) || [0,0])[1] },
             events: { 'onStateChange': (e) => handleStateChange(e, side) }
         });
+        if (side === 'Left') playerLeft = newP; else playerRight = newP;
     } else if (isSC) {
         content.innerHTML = `<div class="social-wrapper"><iframe scrolling="no" frameborder="no" allow="autoplay" src="https://w.soundcloud.com/player/?url=${encodeURIComponent(item)}&color=%23b197fc&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false&visual=true"></iframe></div>`;
     } else if (isIG) {
@@ -509,6 +498,7 @@ function refreshCard(side, index) {
 
     if (isVid || isImg || isSC || isIG || isTwitter || isReddit || isArr) {
         wrapper.classList.remove('hidden');
+        hint.classList.remove('hidden');
         const list = isArr ? entry : [entry];
         const isMulti = list.length > 1;
         
@@ -523,13 +513,6 @@ function refreshCard(side, index) {
     }
 }
 
-function changeLayout(val) {
-    const lK = (val === "AZERTY") ? "A" : "Q", rK = (val === "AZERTY") ? "Z" : "W";
-    document.querySelectorAll('.left-key-label').forEach(el => el.innerText = lK);
-    document.querySelectorAll('.right-key-label').forEach(el => el.innerText = rK);
-    document.getElementById('hint-left').innerText = lK; document.getElementById('hint-right').innerText = rK;
-}
-
 function saveState() { historyStack.push(JSON.parse(JSON.stringify({lstMember, parent, equal, rec, cmp1, cmp2, head1, head2, nrec, numQuestion, finishSize, subIdxLeft, subIdxRight}))); document.getElementById("undoBtn").disabled = false; }
 function undo() {
     if (historyStack.length === 0) return;
@@ -538,7 +521,12 @@ function undo() {
     updateUI(true);
 }
 
-function togglePlayer(player) { if (!player || !player.getPlayerState) return; if (player.getPlayerState() === 1) player.pauseVideo(); else player.playVideo(); }
+function togglePlayer(player) { 
+    if (!player || !player.getPlayerState) return; 
+    var state = player.getPlayerState();
+    if (state === 1) player.pauseVideo(); 
+    else player.playVideo(); 
+}
 
 function showResult() {
     var ranking = 1, sameRank = 1, str = "<table><tr><th>Rank</th><th>Name</th></tr>";
@@ -553,9 +541,28 @@ function showResult() {
 
 window.addEventListener('keydown', (e) => {
     if (e.target.tagName == 'INPUT' || e.target.tagName == 'TEXTAREA') return;
-    if (e.ctrlKey && e.key === 'z') { undo(); return; }
+    
+    // Undo
+    if (e.ctrlKey && e.key.toLowerCase() === 'z') { undo(); return; }
+    
+    const k = e.key.toLowerCase();
+
+    // Left Card: E (Prev), R (Toggle), T (Next)
+    if (k === 'e') { navigateMedia('Left', -1); return; }
+    if (k === 'r') { togglePlayer(playerLeft); return; }
+    if (k === 't') { navigateMedia('Left', 1); return; }
+
+    // Right Card: I (Prev), O (Toggle), P (Next)
+    if (k === 'i') { navigateMedia('Right', -1); return; }
+    if (k === 'o') { togglePlayer(playerRight); return; }
+    if (k === 'p') { navigateMedia('Right', 1); return; }
+
     if (finishFlag) return;
-    if (e.key === 'ArrowLeft') sortList(-1); if (e.key === 'ArrowRight') sortList(1); if (e.key === 'ArrowDown') sortList(0);
+    
+    // Sorter Controls
+    if (e.key === 'ArrowLeft') sortList(-1); 
+    if (e.key === 'ArrowRight') sortList(1); 
+    if (e.key === 'ArrowDown') sortList(0);
 });
 
 loadSorterData();
